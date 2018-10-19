@@ -14,6 +14,8 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 export class WelcomePage {
 
+  showButtons : boolean = false;
+
   constructor(public navCtrl: NavController) { }
 
   login() {
@@ -22,5 +24,9 @@ export class WelcomePage {
 
   signup() {
     this.navCtrl.push('SignupPage');
+  }
+
+  toggleButtons(){
+    this.showButtons=!this.showButtons;
   }
 }

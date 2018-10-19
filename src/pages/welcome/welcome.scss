@@ -1,36 +1,51 @@
 page-welcome {
+  .bg{
+    background: url('../assets/img/splashbg.jpeg')
+  }
   .splash-bg {
     position: relative;
     background: url('../assets/img/splashbg.png') no-repeat transparent;
-    background-size: cover;
+    background-size: cover;          
     height: 45%;
     z-index: 1;
-    background-repeat: repeat-x;
-    animation: animatedBackground 40s linear infinite;
+    background-repeat: repeat-x ;
+    animation: animatedBackground 80s linear infinite;
   }
+ 
 
   @keyframes animatedBackground {
     from { background-position: 0 0; }
     to { background-position: 100% 0; }
   }
 
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 40px -10px #3a8dc2;
+    }
+    to {
+      box-shadow: 0 0 40px 10px #3a8dc2;
+    }
+  }
+
   .splash-info {
     position: relative;
     z-index: 2;
-    margin-top: -64px;
+    margin-top: 80%;
     text-align: center;
   }
   .splash-logo {
-    margin: auto;
-    background: url('../assets/img/appicon.png') repeat transparent;
+
+    background: url('../assets/img/logo.png') transparent;
     background-size: 100%;
-    width: 128px;
-    height: 128px;
+    background-color: transparent;  
+    animation: glow 2s infinite alternate;
   }
-  .splash-intro {
-    font-size: 18px;
-    font-weight: bold;
-    max-width: 80%;
+
+
+
+  .splash-content {
+    width: 100%;
+    left: 0;
     margin: auto;
   }
   button.login {

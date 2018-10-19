@@ -1,0 +1,37 @@
+<!--
+  Generated template for the AddCategoryPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>add Category</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+        <ion-item>
+            <ion-input type="text" [(ngModel)]="category.name" placeholder="Title"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-textarea type="text" [(ngModel)]="category.details" placeholder="Notes"></ion-textarea>
+        </ion-item>
+        <ion-item>
+            <ion-textarea type="text" [(ngModel)]="category.icon" placeholder="Icon"></ion-textarea>
+        </ion-item>
+        
+        <ion-item>
+          <ion-input type="number" [(ngModel)]="category.balance" placeholder="Balance"></ion-input>
+      </ion-item>
+        <br>
+        <button ion-button (click)= "addCategory()" > Add Category </button>
+    
+        <button ion-button color="danger" (click)= "cancel()">Cancel </button>
+        <br>
+    </ion-card-content>
+</ion-card>
+</ion-content>

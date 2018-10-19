@@ -1,33 +1,36 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
-
+    <ion-title>Categories</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="addItem()">
+      <button ion-button icon-only (click)="addCategory()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content>
-
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">
-      <button ion-item (click)="openItem(item)">
-        <ion-avatar item-start>
-          <img [src]="item.profilePic" />
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p>{{item.about}}</p>
-        <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
-      </button>
-
+      <div ion-item (click)="openItem(item)">
+        <ion-grid>
+          <ion-row align-items-center>
+            <ion-col col-3>
+              <ion-icon class="list-icon" *ngIf="item.icon && item.icon.indexOf(' ')==-1" [name]="item.icon"></ion-icon>
+            </ion-col>
+            <ion-col col-9 align-self-center>
+              <h2><b>{{item.name}}</b></h2>
+              <p item-end *ngIf="item.details">{{item.details}}</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
       <ion-item-options>
+        <button ion-button color="secondary" (click)="editItem(item)">
+          <ion-icon class="list-action" name="create"></ion-icon>
+        </button>
         <button ion-button color="danger" (click)="deleteItem(item)">
-          {{ 'DELETE_BUTTON' | translate }}
+          <ion-icon class="list-action" name="trash"></ion-icon>
         </button>
       </ion-item-options>
     </ion-item-sliding>

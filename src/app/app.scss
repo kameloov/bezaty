@@ -14,3 +14,25 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.btn-gold {
+    background: url('../assets/img/btnGold.png') transparent;
+    background-size: 100%;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    font-weight: bold;
+    color: color($colors,dark);
+    background-color: transparent;
+  }
+
+  .btn-silver {
+    background: url('../assets/img/btnSilver.png') transparent;
+    background-size: 100%;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    font-weight: bold;
+    color: color($colors,dark);
+    background-color: transparent;
+  }
+

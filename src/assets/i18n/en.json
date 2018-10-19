@@ -5,8 +5,8 @@
   "EMAIL": "Email",
   "USERNAME": "Username",
   "PASSWORD": "Password",
-  "LOGIN": "Sign in",
-  "SIGNUP": "Sign up",
+  "LOGIN": "Login",
+  "SIGNUP": "Register",
 
   "TAB1_TITLE": "Items",
   "TAB2_TITLE": "Search",

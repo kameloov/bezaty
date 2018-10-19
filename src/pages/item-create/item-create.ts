@@ -21,7 +21,7 @@ export class ItemCreatePage {
     this.form = formBuilder.group({
       profilePic: [''],
       name: ['', Validators.required],
-      about: ['']
+      details: ['']
     });
 
     // Watch the form for changes, and
@@ -53,11 +53,9 @@ export class ItemCreatePage {
   processWebImage(event) {
     let reader = new FileReader();
     reader.onload = (readerEvent) => {
-
       let imageData = (readerEvent.target as any).result;
       this.form.patchValue({ 'profilePic': imageData });
     };
-
     reader.readAsDataURL(event.target.files[0]);
   }
 

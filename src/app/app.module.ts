@@ -8,10 +8,13 @@ import { IonicStorageModule, Storage } from '@ionic/storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-
+import { HttpModule } from "@angular/http";
 import { Items } from '../mocks/providers/items';
 import { Settings, User, Api } from '../providers';
 import { MyApp } from './app.component';
+import { DatabaseProvider } from '../providers/database/database';
+import {SQLitePorter} from '@ionic-native/sqlite-porter';
+import {SQLite} from '@ionic-native/sqlite';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -41,6 +44,7 @@ export function provideSettings(storage: Storage) {
   imports: [
     BrowserModule,
     HttpClientModule,
+    HttpModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -64,7 +68,10 @@ export function provideSettings(storage: Storage) {
     StatusBar,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    DatabaseProvider,
+    SQLitePorter,
+    SQLite
   ]
 })
 export class AppModule { }
