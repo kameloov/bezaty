@@ -13,6 +13,10 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
+      <ion-item>
+        <ion-icon class="list-icon" [name]="icon" *ngIf="category.icon"></ion-icon>
+        <button ion-button (click)="showIcons()" *ngIf="!category.icon" >Select icon</button>
+      </ion-item>
         <ion-item>
             <ion-input type="text" [(ngModel)]="category.name" placeholder="Title"></ion-input>
         </ion-item>
@@ -20,16 +24,16 @@
         <ion-item>
             <ion-textarea type="text" [(ngModel)]="category.details" placeholder="Notes"></ion-textarea>
         </ion-item>
+
         <ion-item>
             <ion-textarea type="text" [(ngModel)]="category.icon" placeholder="Icon"></ion-textarea>
         </ion-item>
-        
+      
         <ion-item>
           <ion-input type="number" [(ngModel)]="category.balance" placeholder="Balance"></ion-input>
       </ion-item>
         <br>
         <button ion-button (click)= "addCategory()" > Add Category </button>
-    
         <button ion-button color="danger" (click)= "cancel()">Cancel </button>
         <br>
     </ion-card-content>

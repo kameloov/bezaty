@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the IconListPage page.
@@ -15,11 +15,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class IconListPage {
   iconList :String [] =['add','add-circle','alarm','albums','alert','american-football','home','car','pizza'];
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,public viewCtrl : ViewController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad IconListPage');
+  }
+
+  select(icon: string) {
+    this.viewCtrl.dismiss(icon);
+  }
+
+  cancel(icon: string) {
+    this.viewCtrl.dismiss();
   }
 
 }

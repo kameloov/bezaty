@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
 import { Category } from '../../models/Category';
 import { DatabaseProvider } from '../../providers/database/database';
 
@@ -17,7 +17,7 @@ import { DatabaseProvider } from '../../providers/database/database';
 })
 export class AddCategoryPage {
   category: Category;
-  constructor(public navCtrl: NavController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, private modalCtrl: ModalController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
     if (this.navParams.get('cat'))
       this.category = this.navParams.get('cat');
     else
@@ -40,5 +40,15 @@ export class AddCategoryPage {
       position: 'top'
     });
     toast.present();
+  }
+
+  showIcons() {
+    let addModal = this.modalCtrl.create('IconListPage');
+    addModal.onDidDismiss(item => {
+      if (item) {
+        this.category.icon = item;
+      }
+      addModal.present();
+    });
   }
 }
