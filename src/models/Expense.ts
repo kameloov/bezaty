@@ -4,7 +4,7 @@ export class Expense {
     id : number;
     category_id : number;
     title : String;
-    hint : String; 
-    date : String ; 
+    hints : String; 
+    item_date : String ; 
     value : number;
 }

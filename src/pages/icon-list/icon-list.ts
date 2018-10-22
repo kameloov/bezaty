@@ -25,9 +25,4 @@ export class IconListPage {
   select(icon: string) {
     this.viewCtrl.dismiss(icon);
   }
-
-  cancel(icon: string) {
-    this.viewCtrl.dismiss();
-  }
-
 }

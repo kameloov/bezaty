@@ -17,6 +17,7 @@ import { Expense } from '../../models/Expense';
 */
 @Injectable()
 export class DatabaseProvider {
+ 
 
   private database: SQLiteObject;
   private databaseReady: BehaviorSubject<Boolean>;
@@ -78,6 +79,18 @@ export class DatabaseProvider {
       })
   }
 
+  updateCategory(category:Category){
+    let data = [category.name, category.details, category.icon,category.balance,category.id];
+    return this.database.executeSql("UPDaTE `category`  Set name=?,details=?,icon=?,balance=? WHERE id = ?;", data)
+      .then(data => {
+        return data;
+      },
+      err=>{
+        console.log(JSON.stringify(err));
+        return err;
+      })
+  }
+
   deleteCategory(category : Category) {
     return this.database.executeSql("DELETE FROM `category` where id = ?", [category.id])
       .then(data => {
@@ -90,8 +103,20 @@ export class DatabaseProvider {
   }
 
   addExpense(item : Expense) {
-    let data = [item.id, item.category_id, item.title, item.hint,item.date,item.value];
+    let data = [null, item.category_id, item.title, item.hints,item.item_date,item.value];
     return this.database.executeSql("INSERT INTO `item` (id,category_id,title,hints,item_date,value) VALUES (?,?,?,?,?,?);", data)
+      .then(data => {
+        return data;
+      },
+      err=>{
+        console.log(JSON.stringify(err));
+        return err;
+      })
+  }
+
+  updateExpense(item : Expense) {
+    let data = [item.category_id, item.title, item.hints,item.item_date,item.value,item.id];
+    return this.database.executeSql("Update `item` set category_id=?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
       .then(data => {
         return data;
       },
@@ -121,6 +146,17 @@ export class DatabaseProvider {
     });
   }
   
+  deleteExpense(expense : Expense) {
+    return this.database.executeSql("DELETE FROM `item` where id = ?", [expense.id])
+      .then(data => {
+        return data;
+      },
+      err=>{
+        console.log(JSON.stringify(err));
+        return err;
+      })
+  }
+
 getExpenses(startDate :String , endDate : String) {
     return this.database.executeSql("select * from item where item_date between ? and ?", [startDate,endDate])
     .then(data => {

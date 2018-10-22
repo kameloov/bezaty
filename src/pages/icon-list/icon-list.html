@@ -12,9 +12,9 @@
 
 <ion-content padding>
   <ion-grid>
-    <ion-row justify-content-start>
+    <ion-row>
       <ion-col col-4 *ngFor="let icon of iconList">
-        <ion-card>
+        <ion-card text-center>
           <ion-card-content text-center (click) ="select(icon)">
             <div>
               <ion-icon class="list-icon" [name]="icon"></ion-icon>

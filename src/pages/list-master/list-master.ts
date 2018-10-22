@@ -55,20 +55,7 @@ export class ListMasterPage {
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
    * modal and then adds the new item to our data source if the user created one.
    */
-  addItem() {
-    let addModal = this.modalCtrl.create('ItemCreatePage');
-    addModal.onDidDismiss(item => {
-      if (item) {
-        console.log(item['name']);
-        this.dbProvider.addCategory(item).then(data => {
-          console.log('item added');
-        }, err => {
-          console.log('error');
-        });
-      }
-    })
-    addModal.present();
-  }
+
   /**
    * Delete an item from the list of items.
    */
@@ -79,7 +66,7 @@ export class ListMasterPage {
     }
 
     editItem(category : Category) {
-      this.navCtrl.push('AddCategoryPage',{'cat':category});
+      this.navCtrl.push('AddCategoryPage',{'cat':category,'edit':true});
     }
   /**
    * Navigate to the detail page for this item.
