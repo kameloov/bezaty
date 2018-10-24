@@ -15,7 +15,8 @@ import { MyApp } from './app.component';
 import { DatabaseProvider } from '../providers/database/database';
 import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {SQLite} from '@ionic-native/sqlite';
-
+import { ChartsModule } from 'ng2-charts';
+import {CommonModule} from '@angular/common';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function createTranslateLoader(http: HttpClient) {
@@ -44,7 +45,9 @@ export function provideSettings(storage: Storage) {
   imports: [
     BrowserModule,
     HttpClientModule,
+    CommonModule,
     HttpModule,
+    ChartsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

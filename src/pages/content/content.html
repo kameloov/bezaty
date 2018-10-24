@@ -1,13 +1,87 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Content
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <p>
-    This is a perfect starting point for a page with primarily text content. The body is padded nicely and ready for prose.
-  </p>
+<ion-content>
+  <ion-card>
+    <ion-card-header class="crd-header" text-center>
+      <div>
+        Summery
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-4>
+            <div text-center>
+              <h3 padding-top>Daily</h3>
+              <hr>
+              <ion-label>{{daily.spent+' / '+daily.total}}</ion-label>
+              <circle-progress [percent]="daily.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
+                [innerStrokeWidth]="2" [outerStrokeColor]="daily.getColor()" [innerStrokeColor]="'#C7E596'" [animation]="true"
+                [animationDuration]="300"></circle-progress>
+
+            </div>
+          </ion-col>
+          <ion-col col-4>
+            <div text-center>
+              <h3 padding-top>Weekly</h3>
+              <hr>
+              <ion-label>{{weekly.spent+' / '+weekly.total}}</ion-label>
+              <circle-progress [percent]="weekly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
+                [innerStrokeWidth]="2" [outerStrokeColor]="weekly.getColor()" [innerStrokeColor]="'#C7E596'"
+                [animation]="true" [animationDuration]="300"></circle-progress>
+            </div>
+          </ion-col>
+          <ion-col col-4>
+            <div text-center >
+              <h3 padding-top> Monthly</h3>
+              <hr>
+              <ion-label>{{monthly.spent+' / '+monthly.total}}</ion-label>
+              <circle-progress [percent]="monthly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
+                [innerStrokeWidth]="2" [outerStrokeColor]="monthly.getColor()" [innerStrokeColor]="'#C7E596'"
+                [animation]="true" [animationDuration]="300"></circle-progress>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card>
+    <ion-card-header class="crd-header" text-center>
+      <div>
+        Quick Access
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-4>
+            <div text-center>
+              <h3 padding-top>Categories</h3>
+              <hr>
+            </div>
+          </ion-col>
+          <ion-col col-4>
+            <div text-center>
+              <h3 padding-top>Weekly</h3>
+              <hr>
+
+            </div>
+          </ion-col>
+          <ion-col col-4>
+            <div text-center >
+              <h3 padding-top> Monthly</h3>
+              <hr>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

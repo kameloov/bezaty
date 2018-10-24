@@ -1,3 +1,8 @@
-page-home {
-
+page-content {
+    .crd-header{
+        background-color: color($colors,'primary');
+        color: whitesmoke;
+        font-size: 90%;
+        padding: 8px;
+    }
 }
