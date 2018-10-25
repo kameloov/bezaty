@@ -68,5 +68,4 @@ export class ContentPage {
     console.log(e);
   }
 
-
 }

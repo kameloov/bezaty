@@ -89,7 +89,6 @@ export class AddExpensePage {
     });
     toast.present();
   }
-
   getCaption(){
     let caption = "Add";
     if(this.edit)

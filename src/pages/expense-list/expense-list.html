@@ -10,13 +10,24 @@
 </ion-header>
 
 <ion-content>
+    <ion-segment [(ngModel)]="section" color="primary" (ionChange)="setCategory($event)">
+        <ion-segment-button value="day">
+          Daily
+        </ion-segment-button>
+        <ion-segment-button value="week">
+          Weekly
+        </ion-segment-button>
+        <ion-segment-button value="month">
+          Monthly
+        </ion-segment-button>
+      </ion-segment>
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">
       <div ion-item (click)="openItem(item)">
         <ion-grid>
           <ion-row align-items-center>
             <ion-col col-9 align-self-center>
-              <h2><b>{{item.title}}</b></h2>
+              <h2>{{item.title}}</h2>
               <p item-end>{{item.hints}}</p>
               <p item-end>{{item.item_date}}</p>
             </ion-col>

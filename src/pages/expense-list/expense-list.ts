@@ -16,25 +16,25 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'expense-list.html',
 })
 export class ExpenseListPage {
+  section: string;
   dbReady: boolean;
   loaded: boolean;
   currentItems: Expense[];
-
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
         if (!this.loaded) {
-          this.loadExpenses();
+          this.setCategory('day');
           this.loaded = true;
         }
       }
     })
   }
 
-  loadExpenses() {
-    this.dbProvider.getExpenses("2018-10-01","2018-10-25").then(data => {
+  loadExpenses(fromDate : string , toDate : string ) {
+    this.dbProvider.getExpenses(fromDate, toDate).then(data => {
       this.currentItems = data;
       console.log(JSON.stringify(data));
     });
@@ -48,19 +48,46 @@ export class ExpenseListPage {
 
   ionViewDidEnter() {
     if (this.dbReady) {
-        this.loadExpenses();
-        this.loaded = true;
+      this.setCategory('day');
+      this.loaded = true;
     }
   }
 
-  deleteItem(expense : Expense) {
-    this.dbProvider.deleteExpense(expense).then(data=>{
-        this.currentItems.splice(this.currentItems.indexOf(expense),1);
+  deleteItem(expense: Expense) {
+    this.dbProvider.deleteExpense(expense).then(data => {
+      this.currentItems.splice(this.currentItems.indexOf(expense), 1);
     });
   }
 
-  editItem(expense : Expense) {
-    this.navCtrl.push('AddExpensePage',{'exp':expense,'edit':true});
+  editItem(expense: Expense) {
+    this.navCtrl.push('AddExpensePage', { 'exp': expense, 'edit': true });
+  }
+
+  setCategory(data: any) {
+    let date = new Date();
+    let toDate = date.getFullYear + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
+    let fromDate = '';
+    fromDate = date.getFullYear + '-' + this.pareseNumber(date.getMonth() + 1) + '-';
+    if (this.section == "day")
+      fromDate = fromDate +this.pareseNumber(date.getDate());
+    if (this.section=="month")
+    fromDate = fromDate +'01';
+    if ( this.section == "week"){
+      let d = date.getDate() - date.getDay();
+      fromDate = fromDate + this.pareseNumber(d);
+    }
+    console.log(fromDate);
+    console.log(toDate);
+    this.loadExpenses(fromDate,toDate);
+  }
+
+  pareseNumber(number: Number) {
+    let result = "";
+    if (number < 10)
+      result = '0' + result;
+    else
+      result = '' + number;
+    return result;
   }
 
 }
