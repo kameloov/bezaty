@@ -32,7 +32,6 @@ export class ExpenseListPage {
       }
     })
   }
-
   loadExpenses(fromDate : string , toDate : string ) {
     this.dbProvider.getExpenses(fromDate, toDate).then(data => {
       this.currentItems = data;
@@ -65,9 +64,9 @@ export class ExpenseListPage {
 
   setCategory(data: any) {
     let date = new Date();
-    let toDate = date.getFullYear + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
+    let toDate = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
     let fromDate = '';
-    fromDate = date.getFullYear + '-' + this.pareseNumber(date.getMonth() + 1) + '-';
+    fromDate = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-';
     if (this.section == "day")
       fromDate = fromDate +this.pareseNumber(date.getDate());
     if (this.section=="month")

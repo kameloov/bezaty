@@ -36,4 +36,5 @@ export class Stats{
         color = this.above90;
         return color;
     }
+    
 }

@@ -1,7 +1,8 @@
 export class Category {
-    id : Number
+    id : number
     name : String
     details : String
     icon : String
     balance : number
+    spent: number
 }

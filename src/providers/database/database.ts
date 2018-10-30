@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Platform } from 'ionic-angular';
 import { Category } from '../../models/Category';
 import { Expense } from '../../models/Expense';
+import { AppSettings } from '../../models/AppSettings';
 
 
 /*
@@ -138,7 +139,7 @@ export class DatabaseProvider {
 
   updateExpense(item: Expense) {
     let data = [item.category_id, item.title, item.hints, item.item_date, item.value, item.id];
-    return this.database.executeSql("Update `item` set category_id=?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
+    return this.database.executeSql("Update `item` set category_id =?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
       .then(data => {
         return data;
       },
@@ -176,16 +177,44 @@ export class DatabaseProvider {
         return expenses;
       },
         err => {
-          console.log("error getting categories");
+          console.log("error getting expenses");
           return [];
         });
   }
 
+  ////////////////////////////// Settings ////////////////////////////////
+
+  updateSettings(settings: AppSettings) {
+    let data = [settings.balance,settings.first_day,settings.language];
+    return this.database.executeSql("UPDATE `settings`  Set balance=?,first_day=?,language=?;", data)
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
+  getSettings() {
+    return this.database.executeSql("select * from settings ", [])
+      .then(data => {
+        let settings : any ;
+        if (data.rows.length > 0) {
+            settings = data.rows.item(0);
+        }
+        return  settings;
+      },
+        err => {
+          console.log("error getting settings");
+          return [];
+        });
+  }
   //////////////////////////// statistics ////////////////////////////////
   getTotalExpense(from: string, to: string) {
     return this.database.executeSql("select sum(value) as total from item where item_date between ? and ?", [from, to])
       .then(data => {
-        console.log(data);
+        console.log(JSON.stringify(data));
         let total = -1;
         if (data.rows.length > 0) {
           total = data.rows.item(0)['total'];
@@ -199,13 +228,18 @@ export class DatabaseProvider {
   }
 
   getTotalCategoryExpense(from: string, to: string,id : number) {
-    return this.database.executeSql("select sum(value) as total from item where id = ? and  item_date between ? and ?", [id,from, to])
+    console.log(from);
+    console.log(to);
+    console.log(id);
+    return this.database.executeSql("select sum(value) as total from item where category_id = ? and  item_date between ? and ?", [id,from, to])
       .then(data => {
-        console.log(data);
+        console.log(JSON.stringify(data));
         let total = -1;
         if (data.rows.length > 0) {
           total = data.rows.item(0)['total'];
+          console.log(JSON.stringify(data.rows.item(0)));
         }
+        console.log(total);
         return total;
       },
         err => {

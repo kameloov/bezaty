@@ -1,45 +1,39 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-title>Settings</ion-title>
   </ion-navbar>
-
 </ion-header>
-
-<ion-content>
-
-  <form [formGroup]="form" *ngIf="settingsReady">
-    <ion-list *ngIf="page == 'main'">
+<ion-content >
+  <ion-card>
+    <ion-card-content>
       <ion-item>
-        <ion-label>{{ 'SETTINGS_OPTION1' | translate }}</ion-label>
-        <ion-toggle formControlName="option1"></ion-toggle>
+        <ion-label floating >Balance</ion-label>
+        <ion-input type="number" [(ngModel)]="settings.balance"></ion-input>
       </ion-item>
-
+      <hr>
       <ion-item>
-        <ion-label>{{ 'SETTINGS_OPTION2' | translate }}</ion-label>
-        <ion-input formControlName="option2"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>{{ 'SETTINGS_OPTION3' | translate }}</ion-label>
-        <ion-select formControlName="option3">
-          <ion-option value="1" checked="true">1</ion-option>
-          <ion-option value="2">2</ion-option>
-          <ion-option value="3">3</ion-option>
+        <ion-label floating>First Day </ion-label>
+        <ion-select [(ngModel)]="settings.first_day" multiple="false" interface="popover">
+          <ion-option *ngFor="let day of days" [value]="day.index">{{day.name}}</ion-option>
         </ion-select>
       </ion-item>
-
-      <button ion-item [navPush]="subSettings" [navParams]="profileSettings">
-        {{ 'SETTINGS_PROFILE_BUTTON' | translate }}
-      </button>
-    </ion-list>
-
-    <ion-list *ngIf="page == 'profile'">
+      <hr>
       <ion-item>
-        <ion-label>{{ 'SETTINGS_OPTION4' | translate }}</ion-label>
-        <ion-input formControlName="option4"></ion-input>
+        <ion-label floating>Language</ion-label>
+        <ion-select [(ngModel)]="settings.language" multiple="false" interface="popover">
+          <ion-option *ngFor="let lang of languages" [value]="lang.value">{{lang.name}}</ion-option>
+        </ion-select>
       </ion-item>
-    </ion-list>
-  </form>
+      <hr>
+     <div >
+        <button ion-button  block (click)="save()" margin-top >Save</button>
+     </div>
+      
+    </ion-card-content>
+  </ion-card>
+
+
+ 
 
 </ion-content>

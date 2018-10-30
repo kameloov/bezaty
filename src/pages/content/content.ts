@@ -58,6 +58,10 @@ export class ContentPage {
    
   }
 
+  showMonthStatistics(){
+    this.navCtrl.push('StatisticsPage',{fromDate:'2018-10-01',toDate:'2018-10-25'});
+  }
+
   // events
 
   public chartClicked(e: any): void {

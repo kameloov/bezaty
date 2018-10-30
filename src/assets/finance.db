@@ -1,3 +1,11 @@
+
+CREATE TABLE IF NOT EXISTS `settings` (
+	`balance`	REAL NOT NULL,
+	`first_day`	INTEGER NOT NULL,
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`language`	INTEGER
+);
+INSERT INTO `settings` (balance,first_day,id,language) VALUES (5000.0,0,1,0);
 CREATE TABLE IF NOT EXISTS `item` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`title`	TEXT NOT NULL,

@@ -13,6 +13,19 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-4 *ngFor="let category of categories">
+        <div text-center>
+          <p>{{category.name}}</p>
+          <hr>
+          <ion-label>{{category.spent+' / '+category.balance}}</ion-label>
+          <circle-progress [percent]="100*category.spent/category.balance" [radius]="20" [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2" [outerStrokeColor]="'#C7E596'" [innerStrokeColor]="'#C7E596'" [animation]="true"
+            [animationDuration]="300"></circle-progress>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

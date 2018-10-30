@@ -21,7 +21,7 @@
               <ion-label>{{daily.spent+' / '+daily.total}}</ion-label>
               <circle-progress [percent]="daily.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
                 [innerStrokeWidth]="2" [outerStrokeColor]="daily.getColor()" [innerStrokeColor]="'#C7E596'" [animation]="true"
-                [animationDuration]="300"></circle-progress>
+                [animationDuration]="300" (click)=showMonthStatistics()></circle-progress>
 
             </div>
           </ion-col>
