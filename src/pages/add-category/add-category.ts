@@ -21,8 +21,10 @@ export class AddCategoryPage {
     if (this.navParams.get('edit')) {
       this.category = this.navParams.get('cat');
       this.edit = this.navParams.get('edit');
-    } else
+    } else{
       this.category = new Category();
+      this.category.is_expense = this.navParams.get('expense');
+    }
   }
 
   ionViewDidLoad() {

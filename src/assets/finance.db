@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS `settings` (
 	`balance`	REAL NOT NULL,
 	`first_day`	INTEGER NOT NULL,
@@ -18,14 +17,21 @@ INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (1,'elecr
 INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (2,'water bill','2018:10:13',8.0,'bill',1);
 INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (3,'change tires','2018:10:13',60.0,NULL,2);
 INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (4,'car wash','2018:10:16',5.0,NULL,2);
+CREATE TABLE IF NOT EXISTS `income` (
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`category_id`	INTEGER NOT NULL,
+	`value`	REAL,
+	`title`	TEXT,
+	`hints`	TEXT,
+	`item_date`	TEXT
+);
 CREATE TABLE IF NOT EXISTS `category` (
-	`id`	INTEGER NOT NULL,
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT,
 	`details`	TEXT,
 	`icon`	INTEGER,
 	`balance`	REAL NOT NULL,
-	PRIMARY KEY(`id`)
+	`is_expense`	INTEGER DEFAULT 1
 );
-INSERT INTO `category` (id,name,details,icon,balance) VALUES (1,'Home','home expenses ','no icon',200.0);
-INSERT INTO `category` (id,name,details,icon,balance) VALUES (2,'car','car expenses','car icon',120.0);
-INSERT INTO `category` (id,name,details,icon,balance) VALUES (3,'food','food expenses','food',250.0);
+INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (1,'Home','home expenses ','home',200.0,1);
+INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (2,'car','car expenses','car',120.0,1);

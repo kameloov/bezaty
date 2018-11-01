@@ -13,6 +13,7 @@ export class ListMasterPage {
   loaded: boolean;
   currentItems: Category[];
   expenses: Expense[];
+  public type : number;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
     this.dbProvider.getDatabaseState().subscribe(ready => {
@@ -27,15 +28,18 @@ export class ListMasterPage {
     })
   }
   loadCategories() {
-    this.dbProvider.getCategories().then(data => {
+    this.dbProvider.getCategories(this.type).then(data => {
       this.currentItems = data;
     });
   }
 
-
+  setType(data :any){
+    this.type = data;
+    this.loadCategories();
+  }
 
   addCategory() {
-    this.navCtrl.push('AddCategoryPage');
+    this.navCtrl.push('AddCategoryPage',{expense : this.type});
   }
   /**
    * The view loaded, let's query our items for the list

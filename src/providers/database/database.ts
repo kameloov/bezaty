@@ -8,6 +8,7 @@ import { Platform } from 'ionic-angular';
 import { Category } from '../../models/Category';
 import { Expense } from '../../models/Expense';
 import { AppSettings } from '../../models/AppSettings';
+import { Income } from '../../models/Income';
 
 
 /*
@@ -92,8 +93,8 @@ export class DatabaseProvider {
         })
   }
 
-  getCategories() {
-    return this.database.executeSql("select * from category order by id desc", [])
+  getCategories(isExpense : number ) {
+    return this.database.executeSql("select * from category  where is_expense =?order by id desc", [isExpense])
       .then(data => {
         //console.log(data);
         let categories = [];
@@ -178,6 +179,65 @@ export class DatabaseProvider {
       },
         err => {
           console.log("error getting expenses");
+          return [];
+        });
+  }
+
+   /////////////////////////////////// expenses //////////////////////////////////////////////////////
+
+   addIncome(item: Income) {
+    let data = [null, item.category_id, item.title, item.hints, item.item_date, item.value];
+    return this.database.executeSql("INSERT INTO `income` (id,category_id,title,hints,item_date,value) VALUES (?,?,?,?,?,?);", data)
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
+  updateIncome(item: Income) {
+    let data = [item.category_id, item.title, item.hints, item.item_date, item.value, item.id];
+    return this.database.executeSql("Update `income` set category_id =?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
+
+
+  deleteIncome(expense: Income) {
+    return this.database.executeSql("DELETE FROM `income` where id = ?", [expense.id])
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
+  getIncomes(startDate: String, endDate: String) {
+    return this.database.executeSql("select * from income where item_date between ? and ?", [startDate, endDate])
+      .then(data => {
+        //console.log(data);
+        let expenses = [];
+        if (data.rows.length > 0) {
+
+          for (var i = 0; i < data.rows.length; i++) {
+            let category = data.rows.item(i);
+            expenses.push(category);
+          }
+        }
+        return expenses;
+      },
+        err => {
+          console.log("error getting incomes");
           return [];
         });
   }

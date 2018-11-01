@@ -5,4 +5,5 @@ export class Category {
     icon : String
     balance : number
     spent: number
+    is_expense : number;
 }

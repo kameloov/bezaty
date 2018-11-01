@@ -10,6 +10,15 @@
 </ion-header>
 
 <ion-content>
+
+    <ion-segment [(ngModel)]="type" color="primary" (ionChange)="setType($event)">
+        <ion-segment-button value="0">
+          Income   <ion-icon name="arrow-down" color = "secondary"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="1">
+          Expense   <ion-icon name="arrow-up" color="danger"></ion-icon>
+        </ion-segment-button>
+      </ion-segment>
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">
       <div ion-item (click)="openItem(item)">
