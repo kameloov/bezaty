@@ -9,19 +9,19 @@
     <ion-card-content>
       <ion-item>
         <ion-label floating >Balance</ion-label>
-        <ion-input type="number" [(ngModel)]="settings.balance"></ion-input>
+        <ion-input type="number" [(ngModel)]="appSettings.balance"></ion-input>
       </ion-item>
       <hr>
       <ion-item>
         <ion-label floating>First Day </ion-label>
-        <ion-select [(ngModel)]="settings.first_day" multiple="false" interface="popover">
+        <ion-select [(ngModel)]="appSettings.first_day" multiple="false" interface="popover">
           <ion-option *ngFor="let day of days" [value]="day.index">{{day.name}}</ion-option>
         </ion-select>
       </ion-item>
       <hr>
       <ion-item>
         <ion-label floating>Language</ion-label>
-        <ion-select [(ngModel)]="settings.language" multiple="false" interface="popover">
+        <ion-select [(ngModel)]="appSettings.language" multiple="false" interface="popover">
           <ion-option *ngFor="let lang of languages" [value]="lang.value">{{lang.name}}</ion-option>
         </ion-select>
       </ion-item>

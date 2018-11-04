@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
-import {ChartsModule} from 'ng2-charts';
 import { ContentPage } from './content';
 import {CommonModule} from '@angular/common';
 import { NgCircleProgressModule } from 'ng-circle-progress';
@@ -22,7 +21,6 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
     }),
     IonicPageModule.forChild(ContentPage),
     TranslateModule.forChild(),
-    ChartsModule,
     CommonModule
   ],
   exports: [

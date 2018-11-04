@@ -13,9 +13,10 @@ export class ListMasterPage {
   loaded: boolean;
   currentItems: Category[];
   expenses: Expense[];
-  public type : number;
+  public type :any;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
+   this.type = "1";
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
@@ -33,8 +34,8 @@ export class ListMasterPage {
     });
   }
 
-  setType(data :any){
-    this.type = data;
+   public setKind(value) {
+    console.log(value);
     this.loadCategories();
   }
 
@@ -47,8 +48,8 @@ export class ListMasterPage {
   ionViewDidLoad() {
   }
 
-
   ionViewDidEnter() {
+
     if (this.dbReady) {
         this.loadCategories();
         this.loaded = true;
@@ -76,8 +77,8 @@ export class ListMasterPage {
    * Navigate to the detail page for this item.
    */
   openItem(item: Category) {
-    this.navCtrl.push('ItemDetailPage', {
+  /*   this.navCtrl.push('ItemDetailPage', {
       item: item
-    });
+    }); */
   }
 }

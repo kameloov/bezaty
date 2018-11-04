@@ -20,15 +20,16 @@ export class Settings {
 
   }
 
-  private loadSettings() {
+  private loadSettings() :any {
     return this.dbProvider.getSettings().then(data => {
       this.settings = data;
     });
   }
 
-  public getSettings():AppSettings {
+  public getSettings() :any{
     if (this.dbReady)
-    return this.settings;
+    return this.loadSettings();
+
   }
 
   public saveSettings(settings : AppSettings){

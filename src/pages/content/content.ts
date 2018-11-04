@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, Platform } from 'ionic-angular';
 import { Stats } from '../../models/Stats';
 import { DatabaseProvider } from '../../providers/database/database';
+import { Settings } from '../../providers';
 @IonicPage()
 @Component({
   selector: 'page-content',
@@ -9,57 +10,70 @@ import { DatabaseProvider } from '../../providers/database/database';
 })
 export class ContentPage {
 
-  doughnutChartLabels: string[] = ['pent', 'remining'];
-  doughnutChartData: number[] = [125, 300 - 125];
-  doughnutChartType: string = 'doughnut';
-  width:number=20;
-  radius : number;
-  daily : Stats;
-  weekly : Stats;
-  monthly : Stats;
+  width: number = 20;
+  radius: number;
+  daily: Stats;
+  weekly: Stats;
+  monthly: Stats;
   dbReady: boolean;
+  total: number;
 
-  constructor(public navCtrl: NavController, private dbProvider : DatabaseProvider, platform: Platform) {
-    this.daily = new Stats();
-    this.daily.setSpent(70);
-    this.daily.setTotal(200);
-    this.weekly = new Stats();
-    this.weekly.setSpent(900);
-    this.weekly.setTotal(1400);
-    this.monthly = new Stats();
-    this.monthly.setSpent(4800);
-    this.monthly.setTotal(6000);
-    dbProvider.getDatabaseState().subscribe((ready)=>{
-      if (ready){
+  constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider,
+    public settings: Settings, platform: Platform) {
+      this.daily = new Stats();
+      this.weekly = new Stats();
+      this.monthly = new Stats();
+      this.refreshValues();
+    platform.ready().then(res => {
+      this.width = platform.width();
+    });
+  }
+
+
+  private refreshValues() {
+     this.settings.getSettings().then((data=>{
+      this.total =data.balance;
+    }));
+    let perDay = this.total / this.getDaysCount();
+    this.daily.setTotal(perDay);
+    this.weekly.setTotal(perDay * 7);
+    this.monthly.setTotal(this.total);
+    this.dbProvider.getDatabaseState().subscribe((ready) => {
+      if (ready) {
         this.dbReady = true;
         this.loadStatistics();
       }
     })
-    platform.ready().then(res => {
-      this.width= platform.width();
-    });
+
+  }
+
+  private getDaysCount(): number {
+    let d = new Date();
+    let days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    return days;
   }
 
   loadStatistics(): any {
-    if (this.dbReady){
-       this.dbProvider.getTotalExpense("2018-10-24","2018-10-24").then((spent)=>{
-        this.daily.setSpent(spent);
-       });
 
-       this.dbProvider.getTotalExpense("2018-10-20","2018-10-24").then((spent)=>{
-        this.weekly.setSpent(spent);
-       });
+    if (this.dbReady) {
+      this.dbProvider.getTotalExpense("2018-10-24", "2018-10-24").then((spent) => {
+        this.daily.setSpent(spent ? spent : 0);
+      });
 
-       this.dbProvider.getTotalExpense("2018-10-01","2018-10-24").then((spent)=>{
-        this.monthly.setSpent(spent);
-       });
+      this.dbProvider.getTotalExpense("2018-10-20", "2018-10-24").then((spent) => {
+        this.weekly.setSpent(spent ? spent : 0);
+      });
+
+      this.dbProvider.getTotalExpense("2018-10-01", "2018-10-24").then((spent) => {
+        this.monthly.setSpent(spent ? spent : 0);
+      });
     }
 
-   
+
   }
 
-  showMonthStatistics(){
-    this.navCtrl.push('StatisticsPage',{fromDate:'2018-10-01',toDate:'2018-10-25'});
+  showMonthStatistics() {
+    this.navCtrl.push('StatisticsPage', { fromDate: '2018-10-01', toDate: '2018-10-25' });
   }
 
   // events
@@ -71,5 +85,11 @@ export class ContentPage {
   public chartHovered(e: any): void {
     console.log(e);
   }
+
+  
+  ionViewDidEnter() {
+    this.refreshValues();
+  }
+
 
 }

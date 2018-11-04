@@ -10,26 +10,33 @@
 </ion-header>
 
 <ion-content>
-
-    <ion-segment [(ngModel)]="type" color="primary" (ionChange)="setType($event)">
-        <ion-segment-button value="0">
-          Income   <ion-icon name="arrow-down" color = "secondary"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="1">
-          Expense   <ion-icon name="arrow-up" color="danger"></ion-icon>
-        </ion-segment-button>
-      </ion-segment>
+  <div padding-bottom>
+    <ion-segment color="primary" [(ngModel)]="type">
+      <ion-segment-button value="0" (click)="setKind(type)">
+        Income <ion-icon name="arrow-down" color="secondary"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button (click)="setKind(type)" value="1">
+        Expense <ion-icon name="arrow-up" color="danger"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">
       <div ion-item (click)="openItem(item)">
         <ion-grid>
           <ion-row align-items-center>
             <ion-col col-3>
-              <ion-icon class="list-icon" *ngIf="item.icon && item.icon.indexOf(' ')==-1" [name]="item.icon"></ion-icon>
+              <ion-icon class="list-icon" (color) ="danger" *ngIf="item.icon && item.icon.indexOf(' ')==-1" [name]="item.icon"></ion-icon>
             </ion-col>
             <ion-col col-9 align-self-center>
-              <h2><b>{{item.name}}</b></h2>
+              <ion-row>
+                <ion-col col-8><b>{{item.name}}</b></ion-col>
+                <ion-col col-4 align-items-center>
+                  <ion-badge (color)="danger" >{{item.balance}}</ion-badge>
+                </ion-col>
+              </ion-row>
               <p item-end *ngIf="item.details">{{item.details}}</p>
+
             </ion-col>
           </ion-row>
         </ion-grid>

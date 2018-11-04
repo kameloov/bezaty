@@ -21,8 +21,9 @@ export class AddExpensePage {
   categories: Category[];
   dbReady: boolean;
   edit: boolean;
+  public isExpense : number;
   constructor(public navCtrl: NavController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
-
+    this.isExpense = navParams.get('is-expense');
     this.edit = this.navParams.get('edit');
     if (this.edit) {
       this.expense = navParams.get('exp');
@@ -44,7 +45,7 @@ export class AddExpensePage {
   }
 
   loadCategories() {
-    this.dbProvider.getCategories().then(data => {
+    this.dbProvider.getCategories(this.isExpense).then(data => {
       this.categories = data;
     });
   }

@@ -18,6 +18,7 @@ export class AddCategoryPage {
   category: Category;
   edit: boolean;
   constructor(public navCtrl: NavController, private modalCtrl: ModalController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
+    console.log(JSON.stringify(navParams));
     if (this.navParams.get('edit')) {
       this.category = this.navParams.get('cat');
       this.edit = this.navParams.get('edit');

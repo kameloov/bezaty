@@ -70,8 +70,8 @@ export class DatabaseProvider {
   }
 
   addCategory(category: Category) {
-    let data = [null, category.name, category.details, category.icon, category.balance];
-    return this.database.executeSql("INSERT INTO `category` (id,name,details,icon,balance) VALUES (?,?,?,?,?);", data)
+    let data = [null, category.name, category.details, category.icon, category.balance,category.is_expense];
+    return this.database.executeSql("INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
         return data;
       },
@@ -94,7 +94,7 @@ export class DatabaseProvider {
   }
 
   getCategories(isExpense : number ) {
-    return this.database.executeSql("select * from category  where is_expense =?order by id desc", [isExpense])
+    return this.database.executeSql("select * from category  where is_expense =? order by id desc", [isExpense])
       .then(data => {
         //console.log(data);
         let categories = [];

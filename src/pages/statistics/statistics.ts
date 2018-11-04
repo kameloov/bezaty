@@ -39,7 +39,7 @@ export class StatisticsPage {
   }
 
   loadCategories() {
-    this.dbProvider.getCategories().then(data => {
+    this.dbProvider.getCategories(1).then(data => {
       this.categories = data;
       if (this.categories){
         this.categories.forEach(element => {

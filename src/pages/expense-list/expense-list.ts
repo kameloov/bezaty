@@ -39,7 +39,7 @@ export class ExpenseListPage {
     });
   }
   addExpense() {
-    this.navCtrl.push('AddExpensePage');
+    this.navCtrl.push('AddExpensePage',{'is-expense':1});
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad ExpenseListPage');
