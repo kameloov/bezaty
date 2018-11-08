@@ -14,7 +14,8 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
   templateUrl: 'icon-list.html',
 })
 export class IconListPage {
-  iconList :String [] =['add','add-circle','alarm','albums','alert','american-football','home','car','pizza'];
+  iconList :String [] =['add','add-circle','alarm','albums','alert','american-football','home',
+  'car','pizza','play',"aperture",'basket'];
   constructor(public navCtrl: NavController,public viewCtrl : ViewController, public navParams: NavParams) {
   }
 

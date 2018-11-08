@@ -18,10 +18,10 @@
             <div text-center>
               <h3 padding-top>Daily</h3>
               <hr>
-              <ion-label>{{daily.spent+' / '+daily.total.toFixed(2)}}</ion-label>
+              <ion-label class="small-text">{{daily.spent+' / '+daily.total.toFixed(2)}}</ion-label>
               <circle-progress *ngIf="daily" [percent]="daily.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
                 [innerStrokeWidth]="2" [outerStrokeColor]="daily.getColor()" [innerStrokeColor]="'#C7E596'" [animation]="true"
-                [animationDuration]="300" (click)=showMonthStatistics()></circle-progress>
+                [animationDuration]="300" (click)="showDayStatistics()"></circle-progress>
 
             </div>
           </ion-col>
@@ -29,20 +29,20 @@
             <div text-center>
               <h3 padding-top>Weekly</h3>
               <hr>
-              <ion-label>{{weekly.spent+' / '+weekly.total.toFixed(2)}}</ion-label>
+              <ion-label class="small-text">{{weekly.spent+' / '+weekly.total.toFixed(2)}}</ion-label>
               <circle-progress *ngIf="weekly" [percent]="weekly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
                 [innerStrokeWidth]="2" [outerStrokeColor]="weekly.getColor()" [innerStrokeColor]="'#C7E596'"
-                [animation]="true" [animationDuration]="300"></circle-progress>
+                [animation]="true"  (click)="showWeekStatistics()" [animationDuration]="300"></circle-progress>
             </div>
           </ion-col>
           <ion-col col-4>
             <div text-center>
               <h3 padding-top> Monthly</h3>
               <hr>
-              <ion-label>{{monthly.spent+' / '+monthly.total}}</ion-label>
+              <ion-label class="small-text">{{monthly.spent+' / '+monthly.total}}</ion-label>
               <circle-progress *ngIf="monthly" [percent]="monthly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
                 [innerStrokeWidth]="2" [outerStrokeColor]="monthly.getColor()" [innerStrokeColor]="'#C7E596'"
-                [animation]="true" [animationDuration]="300"></circle-progress>
+                [animation]="true" (click)="showMonthStatistics()" [animationDuration]="300"></circle-progress>
             </div>
           </ion-col>
         </ion-row>

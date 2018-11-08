@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, Platform, Loading } from 'ionic-angular';
 import { Stats } from '../../models/Stats';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Settings } from '../../providers';
@@ -18,24 +18,29 @@ export class ContentPage {
   monthly: Stats;
   dbReady: boolean;
   total: number;
+  public loading : boolean;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider,
     public settings: Settings, platform: Platform) {
+      this.loading = true;
       this.daily = new Stats();
       this.weekly = new Stats();
       this.monthly = new Stats();
-      this.refreshValues();
+    //  this.refreshValues();
     platform.ready().then(res => {
       this.width = platform.width();
     });
   }
 
   private refreshValues() {
+    this.loading = true;
     this.dbProvider.getDatabaseState().subscribe((ready) => {
       if (ready) {
         this.dbReady = true;
         this.loadStatistics();
-      }
+       } else 
+        this.loading = false;
+
     })
   }
 
@@ -55,12 +60,13 @@ export class ContentPage {
         this.weekly.setTotal(perDay * 7);
         this.monthly.setTotal(this.total);
       })
-
-      this.dbProvider.getTotalExpense("2018-11-07", "2018-11-07").then((spent) => {
+      let d = new Date();
+      let to = this.dateTostr(d);
+      this.dbProvider.getTotalExpense("2018-11-08", "2018-11-08").then((spent) => {
         this.daily.setSpent(spent ? spent : 0);
       });
 
-      this.dbProvider.getTotalExpense("2018-11-01", "2018-11-07").then((spent) => {
+      this.dbProvider.getTotalExpense("2018-11-01",to).then((spent) => {
         this.weekly.setSpent(spent ? spent : 0);
       });
 
@@ -72,8 +78,15 @@ export class ContentPage {
 
   }
 
-  showMonthStatistics() {
-    this.navCtrl.push('StatisticsPage', { fromDate: '2018-10-01', toDate: '2018-11-07' });
+  public showMonthStatistics() {
+    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-01', toDate: '2018-11-08' });
+  }
+
+  public showDayStatistics() {
+    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-08', toDate: '2018-11-08' });
+  }
+  public showWeekStatistics() {
+    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-01', toDate: '2018-11-08' });
   }
 
  showAdd(is_expense : boolean){
@@ -88,5 +101,9 @@ export class ContentPage {
     this.refreshValues();
   }
 
+
+  dateTostr(date : Date){
+    return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+  }
 
 }

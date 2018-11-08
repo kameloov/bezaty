@@ -29,7 +29,7 @@
 
 
   <ion-list *ngIf="!loading">
-    <ion-item-sliding *ngFor="let item of currentItems">
+    <ion-item-sliding *ngFor="let item of currentItems"  (click) ="showDetails(item.title)">
       <div ion-item>
         <ion-grid *ngIf= "is_expense">
           <ion-row align-items-center>
@@ -38,7 +38,7 @@
                 [animation]="true" [animationDuration]="0"></circle-progress>
             </ion-col>
             <ion-col col-6>
-              <h2>{{item.title}}</h2>
+              <h2>{{getTitle(item.title)}}</h2>
               <!--   <p item-end>{{item.hints}}</p> -->
               <!--   <p item-end>{{item.total}}</p> -->
             </ion-col>
@@ -51,8 +51,8 @@
         <ion-grid *ngIf= "!is_expense">
           <ion-row align-items-center>
   
-            <ion-col col-9 >
-              <h2>{{item.title}}</h2>
+            <ion-col col-9 text-center >
+              <h2>{{getTitle(item.title)}}</h2>
               <!--   <p item-end>{{item.hints}}</p> -->
               <!--   <p item-end>{{item.total}}</p> -->
             </ion-col>

@@ -31,16 +31,14 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   pages: any[] = [
-    { title: 'Tutorial', component: 'TutorialPage',params:{} },
+    { title: 'Welcome', component: 'WelcomePage' },
+    { title: 'Home', component: 'ContentPage' },
+    { title: 'Categories', component: 'ListMasterPage' },
     { title: 'Expenses', component: 'ExpenseListPage',params:{is_expense : true} },
     { title: 'Income', component: 'ExpenseListPage',params:{is_expense : false} },
-    { title: 'Content', component: 'ContentPage' },
-    { title: 'Login', component: 'AddExpensePage' },
-    { title: 'Signup', component: 'SignupPage' },
-    { title: 'Master Detail', component: 'ListMasterPage' },
-    { title: 'Menu', component: 'MenuPage' },
+    { title: 'Tutorial', component: 'TutorialPage',params:{} },
     { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Search', component: 'SearchPage' }
+    { title: 'Contact us', component: 'SearchPage' }
   ]
   
   constructor(private translate: TranslateService, platform: Platform,

@@ -21,4 +21,8 @@ page-content {
         font-size: 60px; //Preferred size here
         color: color($colors,danger);
     }
+    .small-text{
+        font-size: 80%;
+    font-weight: 600;    
+    }
 }

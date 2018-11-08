@@ -31,7 +31,9 @@ export class AddExpensePage {
       this.expense = navParams.get('exp');
     } else {
       this.expense = new Expense();
-      this.expense.item_date = "" + Date.now();
+      let d = new Date();
+      
+      this.expense.item_date = d.toISOString();
     }
     this.categories = [];
     this.dbProvider.getDatabaseState().subscribe(ready => {
@@ -64,6 +66,7 @@ export class AddExpensePage {
   }
 
   addNew() {
+    this.expense.item_date = this.expense.item_date.split('T')[0];
     if (this.isExpense){
     this.dbProvider.addExpense(this.expense).then(data => {
       if (!data)

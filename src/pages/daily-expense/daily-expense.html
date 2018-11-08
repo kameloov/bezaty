@@ -1,18 +1,47 @@
-<!--
-  Generated template for the DailyExpensePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>dailyExpense</ion-title>
-  </ion-navbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addExpense()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
 
+  </ion-navbar>
 </ion-header>
 
+<ion-content>
+  <ion-row *ngIf="loading" align-items-center text-center>
+    <ion-col col-12>
+      <ion-spinner name="circles"></ion-spinner>
+    </ion-col>
+  </ion-row>
 
-<ion-content padding>
 
+  <ion-list *ngIf="!loading">
+    <ion-item-sliding *ngFor="let item of currentItems">
+      <div ion-item>
+        <ion-grid>
+          <ion-row align-items-center>
+            <ion-col col-9>
+              <h2><b>{{item.title}}</b></h2>
+              <p >{{item.hints}}</p>
+              <p>{{item.item_date}}</p>
+            </ion-col>
+            <ion-col col-3 text-start>
+              <ion-badge color="primary">{{item.value}}</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </div>
+      <ion-item-options>
+        <button ion-button color="secondary" (click)="editItem(item)">
+          <ion-icon class="list-action" name="create"></ion-icon>
+        </button>
+        <button ion-button color="danger" (click)="deleteItem(item)">
+          <ion-icon class="list-action" name="trash"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

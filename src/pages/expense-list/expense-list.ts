@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { DatabaseProvider } from '../../providers/database/database';
 import { AppSettings } from '../../models/AppSettings';
 import { Stats } from '../../models/Stats';
+import { DailyExpensePage } from '../daily-expense/daily-expense';
 
 
 /**
@@ -24,12 +25,12 @@ export class ExpenseListPage {
   public empty: boolean;
   public currentItems: any[];
   appSettings: AppSettings;
-  public loading :boolean;
-  public is_expense : boolean ;
-  public title : string ; 
+  public loading: boolean;
+  public is_expense: boolean;
+  public title: string;
 
   constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
-     public modalCtrl: ModalController, public navParams : NavParams) {
+    public modalCtrl: ModalController, public navParams: NavParams) {
     this.section = 'day';
     this.is_expense = navParams.get('is_expense');
     this.title = this.is_expense ? 'Expense' : 'Income';
@@ -46,18 +47,18 @@ export class ExpenseListPage {
   }
 
 
-  public getTotal(){
-    let total = 0 ; 
-    if (this.section=='day')
-    total = this.appSettings.balance/this.getDaysCount();
-    if (this.section=='week')
-    total = 7*(this.appSettings.balance/this.getDaysCount());
-    if (this.section=='month')
-    total = this.appSettings.balance;
-    return total ;
+  public getTotal() {
+    let total = 0;
+    if (this.section == 'day')
+      total = this.appSettings.balance / this.getDaysCount();
+    if (this.section == 'week')
+      total = 7 * (this.appSettings.balance / this.getDaysCount());
+    if (this.section == 'month')
+      total = this.appSettings.balance;
+    return total;
   }
 
-  public getColor(percent :number){
+  public getColor(percent: number) {
     let s = new Stats();
     s.setTotal(100);
     s.setSpent(percent);
@@ -93,7 +94,19 @@ export class ExpenseListPage {
     this.getSettings();
   }
 
-
+  public getTitle(title: string) {
+    if (!title)
+    return title;
+    let v = title.split('-');
+    let result = "";
+    if (this.section == 'day')
+      result = 'Day ' + v[2] + ' of ' + v[1] + '-' + v[0];
+    if (this.section == 'week')
+      result = 'Week ' + v[1] + ' of ' + v[0];
+    if (this.section == 'month')
+      result = 'Month ' + v[1] + ' of ' + v[0];
+    return result;
+  }
   getSettings() {
     if (this.dbReady) {
       this.dbProvider.getSettings().then(data => {
@@ -123,22 +136,26 @@ export class ExpenseListPage {
   public loadData(section: string) {
     this.loading = true;
     if (this.dbReady) {
-      this.dbProvider.getPeriodicValues(this.is_expense,section).then(data => {
-        console.log(JSON.stringify(data));
+      this.dbProvider.getPeriodicValues(this.is_expense, section).then(data => {
         if (data)
           this.currentItems = data;
         else
           this.empty = true;
-          this.loading= false;
+        this.loading = false;
       }, err => {
         this.empty = true;
-        this.loading= false;
+        this.loading = false;
       })
     }
   }
-  
-  showCharts(){
-    this.navCtrl.push('PeriodicChartsPage',{section:this.section,is_expense: this.is_expense})
+
+  showCharts() {
+    this.navCtrl.push('PeriodicChartsPage', { section: this.section, is_expense: this.is_expense })
+  }
+
+
+  showDetails(value: string) {
+    this.navCtrl.push('DailyExpensePage', { value: value, type: this.section, is_expense: this.is_expense });
   }
 
   pareseNumber(number: Number) {

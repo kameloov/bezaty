@@ -25,11 +25,11 @@
       </ion-item>
       <ion-item>
         <ion-label color="primary">Date :</ion-label>
-        <ion-datetime displayFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
+        <ion-datetime displayFormat="YYYY-MM-DD"  pickerFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label color="primary">Notes : </ion-label>
-        <ion-textarea type="text" [(ngModel)]="expense.hint" placeholder="Enter Notes"></ion-textarea>
+        <ion-textarea type="text" [(ngModel)]="expense.hints" placeholder="Enter Notes"></ion-textarea>
       </ion-item>
       <ion-item>
         <ion-label color="primary">Amount : </ion-label>

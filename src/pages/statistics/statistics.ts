@@ -29,7 +29,6 @@ export class StatisticsPage {
   public height: number = 0;
   public chartType :string = 'bar';
 
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform,
     private dbProvider: DatabaseProvider) {
     this.fromDate = navParams.get('fromDate');
@@ -41,10 +40,10 @@ export class StatisticsPage {
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
-        if (!this.loaded) {
+        /* if (!this.loaded) {
           this.getData();
           this.loaded = true;
-        }
+        } */
 
       }
     })
@@ -93,7 +92,6 @@ export class StatisticsPage {
   public chartClicked(e: any): void {
     console.log(e);
   }
-
 
   public chartHovered(e: any): void {
     console.log(e);

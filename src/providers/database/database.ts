@@ -49,6 +49,7 @@ export class DatabaseProvider {
     });
   }
 
+  
   getDatabaseState() {
     return this.databaseReady.asObservable();
 
@@ -183,6 +184,35 @@ export class DatabaseProvider {
         });
   }
 
+
+  getPeriodValues(expense : boolean, type :string, value : string ) {
+    let s = "";
+    let table = 'income';
+    if(expense)
+    table = 'item';
+    if(type=="week")
+    s = " strftime('%Y-%W', item_date)";
+    if(type=="month")
+    s= "strftime('%Y-%m', item_date)";
+    if(type=="day")
+    s = "strftime('%Y-%m-%d', item_date)"
+    return this.database.executeSql("select * from "+table+" where "+s+"=?", [value])
+      .then(data => {
+        //console.log(data);
+        let expenses = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let category = data.rows.item(i);
+            expenses.push(category);
+          }
+        }
+        return expenses;
+      },
+        err => {
+          console.log("error getting expenses");
+          return [];
+        });
+  }
   /////////////////////////////////// expenses //////////////////////////////////////////////////////
 
   addIncome(item: Income) {
