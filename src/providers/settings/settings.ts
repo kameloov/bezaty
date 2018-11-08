@@ -21,14 +21,13 @@ export class Settings {
   }
 
   private loadSettings() :any {
-    return this.dbProvider.getSettings().then(data => {
+   this.dbProvider.getSettings().then(data => {
       this.settings = data;
     });
   }
 
   public getSettings() :any{
-    if (this.dbReady)
-    return this.loadSettings();
+    return this.dbProvider.getSettings();
 
   }
 

@@ -3,4 +3,5 @@ export class AppSettings {
     first_day : number;
     id : number;
     language : number;
+    user_email:string;
 }

@@ -5,4 +5,20 @@ page-content {
         font-size: 90%;
         padding: 8px;
     }
+
+    .list-icon {
+        font-size: 60px; //Preferred size here
+        color: color($colors,light);
+    }
+
+    .income-icon {
+        font-size: 60px; //Preferred size here
+        color: color($colors,secondary);
+    }
+
+
+    .expense-icon {
+        font-size: 60px; //Preferred size here
+        color: color($colors,danger);
+    }
 }

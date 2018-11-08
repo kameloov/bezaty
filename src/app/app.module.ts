@@ -17,6 +17,7 @@ import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {SQLite} from '@ionic-native/sqlite';
 import { ChartsModule } from 'ng2-charts';
 import {CommonModule} from '@angular/common';
+import { TatisticsManagerProvider } from '../providers/tatistics-manager/tatistics-manager';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function createTranslateLoader(http: HttpClient) {
@@ -70,7 +71,8 @@ export function provideSettings(dbProvider : DatabaseProvider) {
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     DatabaseProvider,
     SQLitePorter,
-    SQLite
+    SQLite,
+    TatisticsManagerProvider
   ]
 })
 export class AppModule { }

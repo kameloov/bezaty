@@ -1,10 +1,27 @@
+DROP TABLE IF EXISTS `weekly`;
+CREATE TABLE IF NOT EXISTS `weekly` (
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`from_date`	TEXT,
+	`to_date`	TEXT,
+	`value`	REAL
+);
+DROP TABLE IF EXISTS `settings`;
 CREATE TABLE IF NOT EXISTS `settings` (
 	`balance`	REAL NOT NULL,
 	`first_day`	INTEGER NOT NULL,
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	`language`	INTEGER
+	`language`	INTEGER,
+	`user_email`	TEXT
 );
-INSERT INTO `settings` (balance,first_day,id,language) VALUES (5000.0,0,1,0);
+INSERT INTO `settings` (balance,first_day,id,language,user_email) VALUES (5000.0,0,1,0,NULL);
+DROP TABLE IF EXISTS `monthly`;
+CREATE TABLE IF NOT EXISTS `monthly` (
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`from_date`	TEXT,
+	`to_date`	TEXT,
+	`value`	REAL
+);
+DROP TABLE IF EXISTS `item`;
 CREATE TABLE IF NOT EXISTS `item` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`title`	TEXT NOT NULL,
@@ -13,10 +30,7 @@ CREATE TABLE IF NOT EXISTS `item` (
 	`hints`	TEXT,
 	`category_id`	INTEGER NOT NULL
 );
-INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (1,'elecricity bill','2018:10:10',13.0,'bill',1);
-INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (2,'water bill','2018:10:13',8.0,'bill',1);
-INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (3,'change tires','2018:10:13',60.0,NULL,2);
-INSERT INTO `item` (id,title,item_date,value,hints,category_id) VALUES (4,'car wash','2018:10:16',5.0,NULL,2);
+DROP TABLE IF EXISTS `income`;
 CREATE TABLE IF NOT EXISTS `income` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`category_id`	INTEGER NOT NULL,
@@ -25,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `income` (
 	`hints`	TEXT,
 	`item_date`	TEXT
 );
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT,
@@ -33,5 +48,3 @@ CREATE TABLE IF NOT EXISTS `category` (
 	`balance`	REAL NOT NULL,
 	`is_expense`	INTEGER DEFAULT 1
 );
-INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (1,'Home','home expenses ','home',200.0,1);
-INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (2,'car','car expenses','car',120.0,1);

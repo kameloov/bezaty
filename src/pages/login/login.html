@@ -7,16 +7,18 @@
 </ion-header>
 
 
-<ion-content>
-  <form (submit)="doLogin()">
-    <ion-list>
+<ion-content >
+  <ion-card>
+    <ion-card-content>
+    <form (submit)="doLogin()">
+      <ion-list>
 
-      <ion-item>
-        <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
-        <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
-      </ion-item>
+        <ion-item>
+          <ion-label >{{ 'EMAIL' | translate }}</ion-label>
+          <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
+        </ion-item>
 
-      <!--
+        <!--
       Want to use a Username instead of an Email? Here you go:
 
       <ion-item>
@@ -25,15 +27,19 @@
       </ion-item>
       -->
 
-      <ion-item>
-        <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
-        <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
-      </ion-item>
+        <ion-item>
+          <ion-label >{{ 'PASSWORD' | translate }}</ion-label>
+          <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
+        </ion-item>
 
-      <div padding>
-        <button ion-button color="primary" block>{{ 'LOGIN_BUTTON' | translate }}</button>
-      </div>
-
-    </ion-list>
-  </form>
+        <div padding>
+          <button ion-button color="primary" block type ="submit">{{ 'LOGIN_BUTTON' | translate }}</button>
+        </div>
+      </ion-list>
+    </form>
+    <ion-item>
+    <button ion-button outline  block color="danger" (click)="resetPassword()" type="button"> Forgot Password ? </button>
+  </ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -21,9 +21,11 @@ export class AddExpensePage {
   categories: Category[];
   dbReady: boolean;
   edit: boolean;
-  public isExpense : number;
+  public isExpense : boolean;
+  public title : string;
   constructor(public navCtrl: NavController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
-    this.isExpense = navParams.get('is-expense');
+    this.isExpense = navParams.get('is_expense');
+    this.title = this.isExpense ? 'Add expense ': 'Add income ';
     this.edit = this.navParams.get('edit');
     if (this.edit) {
       this.expense = navParams.get('exp');
@@ -45,8 +47,9 @@ export class AddExpensePage {
   }
 
   loadCategories() {
-    this.dbProvider.getCategories(this.isExpense).then(data => {
+    this.dbProvider.getCategories(this.isExpense? 1 : 0).then(data => {
       this.categories = data;
+      console.log("categories",JSON.stringify(data));
     });
   }
   addExpense() {
@@ -61,21 +64,39 @@ export class AddExpensePage {
   }
 
   addNew() {
+    if (this.isExpense){
     this.dbProvider.addExpense(this.expense).then(data => {
       if (!data)
         this.showErrorMessage('Error , expense was not added');
       else
         this.navCtrl.pop();
     });
+  } else {
+      this.dbProvider.addIncome(this.expense).then(data => {
+        if (!data)
+          this.showErrorMessage('Error , Income was not added');
+        else
+          this.navCtrl.pop();
+      });
+  }
   }
 
   editCurrent() {
+    if (this.isExpense){
     this.dbProvider.updateExpense(this.expense).then(data => {
       if (!data)
         this.showErrorMessage('Error , expense was not updated');
       else
         this.navCtrl.pop();
     });
+  } else {
+    this.dbProvider.updateIncome(this.expense).then(data => {
+      if (!data)
+        this.showErrorMessage('Error , Income was not updated');
+      else
+        this.navCtrl.pop();
+    })
+  }
   }
 
   cancel() {

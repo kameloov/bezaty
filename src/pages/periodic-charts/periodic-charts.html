@@ -1,0 +1,49 @@
+<!--
+  Generated template for the PeriodicChartsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-segment [(ngModel)]="section" color="light">
+      <ion-segment-button value="day" (click)="loadData('day')">
+        Daily
+      </ion-segment-button>
+      <ion-segment-button value="week" (click)="loadData('week')">
+        Weekly
+      </ion-segment-button>
+      <ion-segment-button value="month" (click)="loadData('month')">
+        Monthly
+      </ion-segment-button>
+    </ion-segment>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-row *ngIf="loading" align-items-center text-center>
+    <ion-col col-12>
+      <ion-spinner name="circles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+  <div class="row" *ngIf="!loading">
+    <div class="col-md-12">
+      <div style="display: block;">
+        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="lineChartOptions" [legend]="true"
+          width="width" height="400" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+  </div>
+        <ion-row>
+            <ion-col col-4>
+              <button ion-button  block (click)="chartType ='line'">Line</button>
+            </ion-col>
+            <ion-col col-4>
+              <button ion-button block (click)="chartType ='bar'">Bar</button>
+            </ion-col>
+            <ion-col col-4>
+              <button ion-button block (click)="chartType ='doughnut'">Daughnats</button>
+            </ion-col>
+          </ion-row>
+</ion-content>

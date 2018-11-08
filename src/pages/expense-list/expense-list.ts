@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { Expense } from '../../models/Expense';
 import { DatabaseProvider } from '../../providers/database/database';
+import { AppSettings } from '../../models/AppSettings';
+import { Stats } from '../../models/Stats';
+
 
 /**
  * Generated class for the ExpenseListPage page.
@@ -18,72 +20,131 @@ import { DatabaseProvider } from '../../providers/database/database';
 export class ExpenseListPage {
   section: string;
   dbReady: boolean;
-  loaded: boolean;
-  currentItems: Expense[];
+  public loaded: boolean;
+  public empty: boolean;
+  public currentItems: any[];
+  appSettings: AppSettings;
+  public loading :boolean;
+  public is_expense : boolean ;
+  public title : string ; 
 
-  constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
+     public modalCtrl: ModalController, public navParams : NavParams) {
+    this.section = 'day';
+    this.is_expense = navParams.get('is_expense');
+    this.title = this.is_expense ? 'Expense' : 'Income';
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
+        this.getSettings();
         if (!this.loaded) {
-          this.setCategory('day');
+          this.loadData(this.section);
           this.loaded = true;
         }
       }
     })
   }
-  loadExpenses(fromDate : string , toDate : string ) {
-    this.dbProvider.getExpenses(fromDate, toDate).then(data => {
-      this.currentItems = data;
-      console.log(JSON.stringify(data));
-    });
+
+
+  public getTotal(){
+    let total = 0 ; 
+    if (this.section=='day')
+    total = this.appSettings.balance/this.getDaysCount();
+    if (this.section=='week')
+    total = 7*(this.appSettings.balance/this.getDaysCount());
+    if (this.section=='month')
+    total = this.appSettings.balance;
+    return total ;
   }
-  addExpense() {
-    this.navCtrl.push('AddExpensePage',{'is-expense':1});
+
+  public getColor(percent :number){
+    let s = new Stats();
+    s.setTotal(100);
+    s.setSpent(percent);
+    return s.getColor();
   }
+
+  private getDaysCount(): number {
+    let d = new Date();
+    let days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    return days;
+  }
+  /*
+    loadExpenses(fromDate : string , toDate : string ) {
+      this.dbProvider.getExpenses(fromDate, toDate).then(data => {
+        this.currentItems = data;
+        console.log(JSON.stringify(data));
+      });
+    }
+  
+    addExpense() {
+      this.navCtrl.push('AddExpensePage',{is_expense:1});
+    }
+    */
   ionViewDidLoad() {
     console.log('ionViewDidLoad ExpenseListPage');
   }
 
   ionViewDidEnter() {
     if (this.dbReady) {
-      this.setCategory('day');
+      this.loadData(this.section);
       this.loaded = true;
     }
+    this.getSettings();
   }
 
-  deleteItem(expense: Expense) {
-    this.dbProvider.deleteExpense(expense).then(data => {
-      this.currentItems.splice(this.currentItems.indexOf(expense), 1);
-    });
-  }
 
-  editItem(expense: Expense) {
-    this.navCtrl.push('AddExpensePage', { 'exp': expense, 'edit': true });
-  }
-
-  setCategory(data: any) {
-    let date = new Date();
-    let toDate = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
-    let fromDate = '';
-    fromDate = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-';
-    if (this.section == "day")
-      fromDate = fromDate +this.pareseNumber(date.getDate());
-    if (this.section=="month")
-    fromDate = fromDate +'01';
-    if ( this.section == "week"){
-      let d = date.getDate() - date.getDay();
-      fromDate = fromDate + this.pareseNumber(d);
+  getSettings() {
+    if (this.dbReady) {
+      this.dbProvider.getSettings().then(data => {
+        this.appSettings = data;
+      });
     }
-    console.log(fromDate);
-    console.log(toDate);
-    this.loadExpenses(fromDate,toDate);
+  }
+  /*
+    deleteItem(expense: Expense) {
+      this.dbProvider.deleteExpense(expense).then(data => {
+        this.currentItems.splice(this.currentItems.indexOf(expense), 1);
+      });
+    }
+  
+    editItem(expense: Expense) {
+      this.navCtrl.push('AddExpensePage', { 'exp': expense, 'edit': true });
+    }
+  
+    dateTotr(date : Date){
+      let result : string;
+      result = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
+      return result;
+    }
+  */
+
+
+  public loadData(section: string) {
+    this.loading = true;
+    if (this.dbReady) {
+      this.dbProvider.getPeriodicValues(this.is_expense,section).then(data => {
+        console.log(JSON.stringify(data));
+        if (data)
+          this.currentItems = data;
+        else
+          this.empty = true;
+          this.loading= false;
+      }, err => {
+        this.empty = true;
+        this.loading= false;
+      })
+    }
+  }
+  
+  showCharts(){
+    this.navCtrl.push('PeriodicChartsPage',{section:this.section,is_expense: this.is_expense})
   }
 
   pareseNumber(number: Number) {
     let result = "";
     if (number < 10)
-      result = '0' + result;
+      result = '0' + number;
     else
       result = '' + number;
     return result;

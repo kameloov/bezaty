@@ -8,6 +8,7 @@ import { Settings } from '../../providers';
   selector: 'page-content',
   templateUrl: 'content.html'
 })
+
 export class ContentPage {
 
   width: number = 20;
@@ -29,22 +30,13 @@ export class ContentPage {
     });
   }
 
-
   private refreshValues() {
-     this.settings.getSettings().then((data=>{
-      this.total =data.balance;
-    }));
-    let perDay = this.total / this.getDaysCount();
-    this.daily.setTotal(perDay);
-    this.weekly.setTotal(perDay * 7);
-    this.monthly.setTotal(this.total);
     this.dbProvider.getDatabaseState().subscribe((ready) => {
       if (ready) {
         this.dbReady = true;
         this.loadStatistics();
       }
     })
-
   }
 
   private getDaysCount(): number {
@@ -56,15 +48,23 @@ export class ContentPage {
   loadStatistics(): any {
 
     if (this.dbReady) {
-      this.dbProvider.getTotalExpense("2018-10-24", "2018-10-24").then((spent) => {
+      this.dbProvider.getSettings().then((data)=>{
+        this.total = data.balance;
+        let perDay = this.total / this.getDaysCount();
+        this.daily.setTotal(perDay);
+        this.weekly.setTotal(perDay * 7);
+        this.monthly.setTotal(this.total);
+      })
+
+      this.dbProvider.getTotalExpense("2018-11-07", "2018-11-07").then((spent) => {
         this.daily.setSpent(spent ? spent : 0);
       });
 
-      this.dbProvider.getTotalExpense("2018-10-20", "2018-10-24").then((spent) => {
+      this.dbProvider.getTotalExpense("2018-11-01", "2018-11-07").then((spent) => {
         this.weekly.setSpent(spent ? spent : 0);
       });
 
-      this.dbProvider.getTotalExpense("2018-10-01", "2018-10-24").then((spent) => {
+      this.dbProvider.getTotalExpense("2018-11-01", "2018-11-07").then((spent) => {
         this.monthly.setSpent(spent ? spent : 0);
       });
     }
@@ -73,19 +73,16 @@ export class ContentPage {
   }
 
   showMonthStatistics() {
-    this.navCtrl.push('StatisticsPage', { fromDate: '2018-10-01', toDate: '2018-10-25' });
+    this.navCtrl.push('StatisticsPage', { fromDate: '2018-10-01', toDate: '2018-11-07' });
   }
 
-  // events
+ showAdd(is_expense : boolean){
+  this.navCtrl.push("AddExpensePage",{is_expense :is_expense})
+ }
 
-  public chartClicked(e: any): void {
-    console.log(e);
-  }
-
-  public chartHovered(e: any): void {
-    console.log(e);
-  }
-
+ showCategories(){
+   this.navCtrl.push('ListMasterPage');
+ }
   
   ionViewDidEnter() {
     this.refreshValues();

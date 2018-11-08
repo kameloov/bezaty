@@ -1,50 +1,80 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Expenses</ion-title>
-    <ion-buttons end>
+    <ion-title>{{title}}</ion-title>
+    <!--  <ion-buttons end>
       <button ion-button icon-only (click)="addExpense()">
-        <ion-icon name="add"></ion-icon>
+          <ion-icon name="stats"></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons> -->
+    <ion-segment [(ngModel)]="section" color="light">
+      <ion-segment-button value="day" (click)="loadData('day')">
+        Daily
+      </ion-segment-button>
+      <ion-segment-button value="week" (click)="loadData('week')">
+        Weekly
+      </ion-segment-button>
+      <ion-segment-button value="month" (click)="loadData('month')">
+        Monthly
+      </ion-segment-button>
+    </ion-segment>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <ion-segment [(ngModel)]="section" color="primary" (ionChange)="setCategory($event)">
-        <ion-segment-button value="day">
-          Daily
-        </ion-segment-button>
-        <ion-segment-button value="week">
-          Weekly
-        </ion-segment-button>
-        <ion-segment-button value="month">
-          Monthly
-        </ion-segment-button>
-      </ion-segment>
-  <ion-list>
+  <ion-row  *ngIf="loading" align-items-center text-center >
+    <ion-col col-12>
+      <ion-spinner name="circles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-list *ngIf="!loading">
     <ion-item-sliding *ngFor="let item of currentItems">
       <div ion-item>
-        <ion-grid>
+        <ion-grid *ngIf= "is_expense">
           <ion-row align-items-center>
-            <ion-col col-9 align-self-center>
-              <h2>{{item.title}}</h2>
-              <p item-end>{{item.hints}}</p>
-              <p item-end>{{item.item_date}}</p>
-            </ion-col>
             <ion-col col-3>
-              <p text-center color="danger">{{item.value}}</p>
+              <circle-progress [percent]="100*item.total/getTotal()" [outerStrokeColor]="getColor(100*item.total/getTotal())"
+                [animation]="true" [animationDuration]="0"></circle-progress>
+            </ion-col>
+            <ion-col col-6>
+              <h2>{{item.title}}</h2>
+              <!--   <p item-end>{{item.hints}}</p> -->
+              <!--   <p item-end>{{item.total}}</p> -->
+            </ion-col>
+            <ion-col col-3 text-start>
+              <ion-badge color="primary">{{item.total}}</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid *ngIf= "!is_expense">
+          <ion-row align-items-center>
+  
+            <ion-col col-9 >
+              <h2>{{item.title}}</h2>
+              <!--   <p item-end>{{item.hints}}</p> -->
+              <!--   <p item-end>{{item.total}}</p> -->
+            </ion-col>
+            <ion-col col-3 text-start>
+              <ion-badge color="primary">{{item.total}}</ion-badge>
             </ion-col>
           </ion-row>
         </ion-grid>
       </div>
-      <ion-item-options>
+      <!--    <ion-item-options>
         <button ion-button color="secondary" (click)="editItem(item)">
           <ion-icon class="list-action" name="create"></ion-icon>
         </button>
         <button ion-button color="danger" (click)="deleteItem(item)">
           <ion-icon class="list-action" name="trash"></ion-icon>
         </button>
-      </ion-item-options>
+      </ion-item-options> -->
     </ion-item-sliding>
   </ion-list>
+  <ion-fab  bottom right>
+      <button class="btn"  color="danger" ion-fab icon-only (click)= "showCharts()">
+          <ion-icon name="stats"></ion-icon>
+      </button>
+    </ion-fab>
 </ion-content>

@@ -1,10 +1,11 @@
 export class Stats {
-    private total: number;
-    private spent: number;
-    percent: number;
-    private above90: string = '#ff0900';
-    private above75: string = '#f4511a';
-    private above50: string = '#f5dc1b';
+    private total: number =0;
+    private spent: number =0;
+    percent: number =0;
+    private equal100: string = '#f02929';
+    private above90: string = '#f06829';
+    private above75: string = '#f09a29';
+    private above50: string = '#f0d229';
     private above0: string = '#00dc00';
     getSpentPercent() {
         return this.calculatePercent();

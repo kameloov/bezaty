@@ -70,7 +70,7 @@ export class DatabaseProvider {
   }
 
   addCategory(category: Category) {
-    let data = [null, category.name, category.details, category.icon, category.balance,category.is_expense];
+    let data = [null, category.name, category.details, category.icon, category.balance, category.is_expense];
     return this.database.executeSql("INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
         return data;
@@ -93,7 +93,7 @@ export class DatabaseProvider {
         })
   }
 
-  getCategories(isExpense : number ) {
+  getCategories(isExpense: number) {
     return this.database.executeSql("select * from category  where is_expense =? order by id desc", [isExpense])
       .then(data => {
         //console.log(data);
@@ -183,9 +183,9 @@ export class DatabaseProvider {
         });
   }
 
-   /////////////////////////////////// expenses //////////////////////////////////////////////////////
+  /////////////////////////////////// expenses //////////////////////////////////////////////////////
 
-   addIncome(item: Income) {
+  addIncome(item: Income) {
     let data = [null, item.category_id, item.title, item.hints, item.item_date, item.value];
     return this.database.executeSql("INSERT INTO `income` (id,category_id,title,hints,item_date,value) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
@@ -244,9 +244,21 @@ export class DatabaseProvider {
 
   ////////////////////////////// Settings ////////////////////////////////
 
+  updateEmail(email: string) {
+
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ;", [email])
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
   updateSettings(settings: AppSettings) {
-    let data = [settings.balance,settings.first_day,settings.language];
-    return this.database.executeSql("UPDATE `settings`  Set balance=?,first_day=?,language=?;", data)
+    let data = [settings.balance, settings.first_day, settings.language, settings.user_email];
+    return this.database.executeSql("UPDATE `settings`  Set balance=?,first_day=?,language=?,user_email=?;", data)
       .then(data => {
         return data;
       },
@@ -259,11 +271,11 @@ export class DatabaseProvider {
   getSettings() {
     return this.database.executeSql("select * from settings ", [])
       .then(data => {
-        let settings : any ;
+        let settings: any;
         if (data.rows.length > 0) {
-            settings = data.rows.item(0);
+          settings = data.rows.item(0);
         }
-        return  settings;
+        return settings;
       },
         err => {
           console.log("error getting settings");
@@ -287,11 +299,11 @@ export class DatabaseProvider {
         });
   }
 
-  getTotalCategoryExpense(from: string, to: string,id : number) {
+  getTotalCategoryExpense(from: string, to: string, id: number) {
     console.log(from);
     console.log(to);
     console.log(id);
-    return this.database.executeSql("select sum(value) as total from item where category_id = ? and  item_date between ? and ?", [id,from, to])
+    return this.database.executeSql("select sum(value) as total from item where category_id = ? and  item_date between ? and ?", [id, from, to])
       .then(data => {
         console.log(JSON.stringify(data));
         let total = -1;
@@ -306,6 +318,69 @@ export class DatabaseProvider {
           console.log("error getting category statistics");
           return -1;
         });
+  }
+
+
+  getMaxMinExpenseDates() {
+    return this.database.executeSql('select max(item_date) as max_date , min(item_date) as min_date from item;').then((data) => {
+      if (data.rows.length > 0) {
+        let max_date = data.rows.item(0)['max_date'];
+        let min_date = data.rows.item(0)['min_date'];
+        console.log("min date is ",min_date);
+        console.log("max date is ",max_date);
+        return { max: max_date, min: min_date };
+        
+      }
+    },
+    err=>{
+      console.log(JSON.stringify(err));
+    }
+    );
+  }
+
+  getPeriodicValues(expense : boolean ,type : string){
+    let s = "";
+    let table = 'income';
+    if(expense)
+    table = 'item';
+    if(type=="week")
+    s = " strftime('%Y-%W', item_date)";
+    if(type=="month")
+    s= "strftime('%Y-%m', item_date)";
+    if(type=="day")
+    s = "strftime('%Y-%m-%d', item_date)"
+    return this.database.executeSql("select  "+ s+
+    " as title, sum(value) as total from "+table+" GROUP BY  "+s+" order by "+s+" DESC limit 100",[]).then(data=>{
+      let stats=[];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          let r = data.rows.item(i);
+          stats.push(r);
+        }
+      }
+      return stats;
+    }).catch(reason=>{
+     return null;
+    });
+  }
+
+  
+  getCategoricExpenses(from: string, to: string){
+  
+    return this.database.executeSql("select item.category_id,sum(value) as total, category.name  as title "+
+    "  from item left join category on category.id=item.category_id  where  item_date between ? and ?"+
+    " group by category_id", [from, to]).then(data=>{
+      let stats=[];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          let r = data.rows.item(i);
+          stats.push(r);
+        }
+      }
+      return stats;
+    }).catch(reason=>{
+     return null;
+    });
   }
   ////////////////////////// export database ////////////////////////////
 

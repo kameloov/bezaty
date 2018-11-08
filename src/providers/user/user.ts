@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 
 import { Api } from '../api/api';
 import { Account } from '../../models/Account';
+import { DatabaseProvider } from '../database/database';
 
 /**
  * Most apps have the concept of a User. This is a simple provider
@@ -28,7 +29,7 @@ import { Account } from '../../models/Account';
 export class User {
   _user: any;
 
-  constructor(public api: Api) { }
+  constructor(public api: Api, public db : DatabaseProvider) { }
 
   /**
    * Send a POST request to our login endpoint with the data
@@ -41,6 +42,7 @@ export class User {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {
         this._user = res.data;
+        this.db.updateEmail(accountInfo.email);
       } else {
       }
     }, err => {
@@ -50,18 +52,29 @@ export class User {
     return seq;
   }
 
+  sendResetCode(mail : string){
+    let c = Math.floor(Math.random()*9000+1000);
+    let req = this.api.post('reset/password',{email:mail,code :c }).share();
+    return req;
+  }
+
+  resetPassword(mail :string , pass : string) {
+   return this.api.post('upate/password',{email:mail,passwor:pass});
+
+  }
+
   /**
    * Send a POST request to our signup endpoint with the data
    * the user entered on the form.
    */
   signup(accountInfo: Account) {
     let seq = this.api.post('users/register', accountInfo).share();
-
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {
         accountInfo.id = res.data;
         this._user = accountInfo;
+        this.db.updateEmail(accountInfo.email);
 
       }
     }, err => {

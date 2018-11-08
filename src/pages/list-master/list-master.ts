@@ -22,6 +22,7 @@ export class ListMasterPage {
         this.dbReady = true;
         if (!this.loaded) {
           this.loadCategories();
+          this.loadStatistics();
           this.loaded = true;
         }
         //this.addTestCategory();
@@ -48,11 +49,18 @@ export class ListMasterPage {
   ionViewDidLoad() {
   }
 
+  loadStatistics(){
+    this.dbProvider.getCategoricExpenses("2018-08-01","2018-11-07").then(data => {
+      console.log(JSON.stringify(data));
+    });
+  }
+
   ionViewDidEnter() {
 
     if (this.dbReady) {
+      this.loaded = true;
         this.loadCategories();
-        this.loaded = true;
+       this.loadStatistics();
     }
   }
 

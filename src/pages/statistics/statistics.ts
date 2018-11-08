@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
-import { Category } from '../../models/Category';
 
 /**
  * Generated class for the StatisticsPage page.
@@ -19,18 +18,31 @@ export class StatisticsPage {
 
   dbReady: boolean;
   loaded: boolean;
-  categories: Category[];
-  fromDate : string  = '2018-10-01';
-  toDate : string  = '2018-10-25';
+  data: any[];
+  fromDate: string = '2018-5-01';
+  toDate: string = '2018-11-07';
+  public chartData: any = [{ data: [0, 0, 0, 0], label: "daily" }];
+  public chartLabels: any;
+  public loading: boolean
+  public empty: boolean;
+  public width: number = 0;
+  public height: number = 0;
+  public chartType :string = 'bar';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private dbProvider: DatabaseProvider) {
-    //this.fromDate = navParams.get('fromDate');
-    //this.toDate = navParams.get('toDate');
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform,
+    private dbProvider: DatabaseProvider) {
+    this.fromDate = navParams.get('fromDate');
+    this.toDate = navParams.get('toDate');
+    platform.ready().then(res => {
+      this.width = platform.width();
+      this.height = platform.height();
+    });
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
         if (!this.loaded) {
-          this.loadCategories();
+          this.getData();
           this.loaded = true;
         }
 
@@ -38,33 +50,58 @@ export class StatisticsPage {
     })
   }
 
-  loadCategories() {
-    this.dbProvider.getCategories(1).then(data => {
-      this.categories = data;
-      if (this.categories){
-        this.categories.forEach(element => {
-          this.getSpentAmount(element);
-        });
-      }
-    });
-  }
 
-  getSpentAmount(category : Category){
-    if (this.dbReady){
-      this.dbProvider.getTotalCategoryExpense(this.fromDate,this.toDate,category.id).then((total)=>{
-        category.spent = total;
+  getData() {
+    if (this.dbReady) {
+      this.loading = true;
+      this.dbProvider.getCategoricExpenses(this.fromDate, this.toDate).then((result) => {
+        this.data = result;
+        console.log(JSON.stringify(this.data));
+        this.extractChartData();
+        this.extractChartLabes();
+        this.loading = false;
       })
     }
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad StatisticsPage');
+  extractChartData() {
+    let values = [];
+    this.data.forEach(element => {
+      values.push(element.total);
+    });
+    this.chartData = [{ label: "daily", data: values }];
   }
 
+
+  extractChartLabes() {
+    let values = [];
+    this.data.forEach(element => {
+      values.push(element.title);
+    });
+    this.chartLabels = values;
+  }
+
+  public ChartOptions: any = {
+    responsive: true
+  };
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad statistics page ');
+  }
+
+  // events
+  public chartClicked(e: any): void {
+    console.log(e);
+  }
+
+
+  public chartHovered(e: any): void {
+    console.log(e);
+  }
   ionViewDidEnter() {
     if (this.dbReady) {
-        this.loadCategories();
-        this.loaded = true;
+      this.getData();
+      this.loaded = true;
     }
   }
 }

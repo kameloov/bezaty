@@ -31,10 +31,9 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   pages: any[] = [
-    { title: 'Tutorial', component: 'TutorialPage' },
-    { title: 'Welcome', component: 'WelcomePage' },
-    { title: 'Expenses', component: 'ExpenseListPage' },
-    { title: 'Cards', component: 'CardsPage' },
+    { title: 'Tutorial', component: 'TutorialPage',params:{} },
+    { title: 'Expenses', component: 'ExpenseListPage',params:{is_expense : true} },
+    { title: 'Income', component: 'ExpenseListPage',params:{is_expense : false} },
     { title: 'Content', component: 'ContentPage' },
     { title: 'Login', component: 'AddExpensePage' },
     { title: 'Signup', component: 'SignupPage' },
@@ -45,13 +44,22 @@ export class MyApp {
   ]
   
   constructor(private translate: TranslateService, platform: Platform,
-    dbProvider:DatabaseProvider, settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+    public dbProvider:DatabaseProvider, settings: Settings, private config: Config, 
+    private statusBar: StatusBar, private splashScreen: SplashScreen) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#3a8dc2')
       this.splashScreen.hide();
+      this.dbProvider.getDatabaseState().subscribe((ready)=>{
+        if (ready){
+         dbProvider.getMaxMinExpenseDates().then((data)=>{
+          //console.log("dates",JSON.stringify(data));
+          })
+        }
+      })
+
     });
     this.initTranslate();
   }
@@ -85,6 +93,7 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+
+    this.nav.setRoot(page.component,page.params);
   }
 }
