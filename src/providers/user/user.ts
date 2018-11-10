@@ -41,8 +41,13 @@ export class User {
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {
-        this._user = res.data;
-        this.db.updateEmail(accountInfo.email);
+        this._user = res.data[0];
+        console.log('updating user email ',accountInfo.email);
+        this.db.updateEmail(accountInfo.email).then(data=>{
+          console.log(data);
+        },err=>{
+          console.log('error ');
+        });
       } else {
       }
     }, err => {

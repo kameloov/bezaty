@@ -33,8 +33,10 @@
           <ion-label color="primary">Confirm password</ion-label>
           <ion-input type="password" [(ngModel)]="confirm" name="password"></ion-input>
         </ion-item>
-        <div padding>
-          <button ion-button color = "primary" block>{{ 'SIGNUP' | translate }}</button>
+        <div padding *ngIf= loading>
+          <button ion-button color = "primary" block>
+              <ion-spinner name="circles" ></ion-spinner>
+              {{ 'SIGNUP' | translate }}</button>
         </div>
 
       </form>

@@ -26,6 +26,25 @@
         </ion-select>
       </ion-item>
       <hr>
+      <ion-item (click)= "backup()">
+        Backup Database 
+      </ion-item>
+      <hr>
+      <ion-item (click)= "restore()">
+        Restore Database 
+      </ion-item>
+       <hr>
+      <ion-item (click)= "reset()">
+        Remove Database 
+      </ion-item>
+     
+      <ion-item>
+        <ion-row *ngIf="loading" align-items-center text-center>
+          <ion-col col-12>
+            <ion-spinner name="circles"></ion-spinner>
+          </ion-col>
+        </ion-row>
+      </ion-item>
      <div >
         <button ion-button  block (click)="save()" margin-top >Save</button>
      </div>

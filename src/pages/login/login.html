@@ -33,7 +33,9 @@
         </ion-item>
 
         <div padding>
-          <button ion-button color="primary" block type ="submit">{{ 'LOGIN_BUTTON' | translate }}</button>
+          <button ion-button color="primary" block type ="submit">
+              <ion-spinner name="circles" *ngIf= loading></ion-spinner>
+            {{ 'LOGIN_BUTTON' | translate }}</button>
         </div>
       </ion-list>
     </form>

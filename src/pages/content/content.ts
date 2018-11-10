@@ -19,6 +19,9 @@ export class ContentPage {
   dbReady: boolean;
   total: number;
   public loading : boolean;
+  public fromWeek : string;
+  public fromMonth : string;
+  public to :string;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider,
     public settings: Settings, platform: Platform) {
@@ -61,16 +64,16 @@ export class ContentPage {
         this.monthly.setTotal(this.total);
       })
       let d = new Date();
-      let to = this.dateTostr(d);
-      this.dbProvider.getTotalExpense("2018-11-08", "2018-11-08").then((spent) => {
+      this.to = this.dateTostr(d);
+      this.dbProvider.getTotalExpense(this.to, this.to).then((spent) => {
         this.daily.setSpent(spent ? spent : 0);
       });
-
-      this.dbProvider.getTotalExpense("2018-11-01",to).then((spent) => {
+      this.fromWeek = this.dateTostr(new Date(d.getFullYear(),d.getMonth(),d.getDate()-7));
+      this.dbProvider.getTotalExpense(this.fromWeek,this.to).then((spent) => {
         this.weekly.setSpent(spent ? spent : 0);
       });
-
-      this.dbProvider.getTotalExpense("2018-11-01", "2018-11-07").then((spent) => {
+      this.fromMonth = this.dateTostr(new Date(d.getFullYear(),d.getMonth(),1));
+      this.dbProvider.getTotalExpense(this.fromMonth, this.to).then((spent) => {
         this.monthly.setSpent(spent ? spent : 0);
       });
     }
@@ -79,14 +82,14 @@ export class ContentPage {
   }
 
   public showMonthStatistics() {
-    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-01', toDate: '2018-11-08' });
+    this.navCtrl.push('StatisticsPage', { fromDate: this.fromMonth, toDate:this.to});
   }
 
   public showDayStatistics() {
-    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-08', toDate: '2018-11-08' });
+    this.navCtrl.push('StatisticsPage', { fromDate: this.to, toDate: this.to});
   }
   public showWeekStatistics() {
-    this.navCtrl.push('StatisticsPage', { fromDate: '2018-11-01', toDate: '2018-11-08' });
+    this.navCtrl.push('StatisticsPage', { fromDate: this.fromWeek, toDate: this.to });
   }
 
  showAdd(is_expense : boolean){

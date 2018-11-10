@@ -59,14 +59,16 @@ export class DatabaseProvider {
       .map(res => res.text())
       .subscribe(sql => {
         console.log("preparing to import");
-        this.sqlitePorter.importSqlToDb(this.database, sql)
+        return this.sqlitePorter.importSqlToDb(this.database, sql)
           .then(data => {
-            console.log("database us ready ");
+            console.log("database is ready ");
             this.databaseReady.next(true);
             this.storage.set('database_filled', true);
+            return data;
           })
       }, err => {
         console.log(err);
+        return err;
       })
   }
 
@@ -276,7 +278,7 @@ export class DatabaseProvider {
 
   updateEmail(email: string) {
 
-    return this.database.executeSql("UPDATE `settings`  Set user_email= ;", [email])
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ?;", [email])
       .then(data => {
         return data;
       },
@@ -313,6 +315,29 @@ export class DatabaseProvider {
         });
   }
   //////////////////////////// statistics ////////////////////////////////
+
+  getRecenttPeriodExpense(type : string){
+    let s = "";
+    if(type=="week")
+    s = "'%Y-%W'";
+    if(type=="month")
+    s= "'%Y-%m'";
+    if(type=="day")
+    s = "'%Y-%m-%d'"
+    return this.database.executeSql("select sum(value) as total from item  where strftime("+s+
+    ",item_date) = strftime("+s+",'now');",[] ).then(data=>{
+      console.log(JSON.stringify(data));
+      let total = -1;
+      if (data.rows.length > 0) {
+        total = data.rows.item(0)['total'];
+      }
+      return total;
+    },
+      err => {
+        console.log(JSON.stringify(err));
+        return -1;
+      });
+  }
   getTotalExpense(from: string, to: string) {
     return this.database.executeSql("select sum(value) as total from item where item_date between ? and ?", [from, to])
       .then(data => {
@@ -415,12 +440,20 @@ export class DatabaseProvider {
   ////////////////////////// export database ////////////////////////////
 
   exportDatabase() {
-    return this.sqlitePorter.exportDbToSql(this.database)
-      .then(data => {
-        console.log(data);
-      },
-        err => {
-          console.log(err);
-        })
+    return this.sqlitePorter.exportDbToSql(this.database).then(data=>{
+      //console.log(JSON.stringify(data));
+      return data;
+    })
+  }
+
+
+  importDataBase( data ){
+    return this.sqlitePorter.importSqlToDb(this.database,data).then(data=>{
+      return data;
+    },err=>{
+      return err;
+    }).catch(err=>{
+      console.log(JSON.stringify(err));
+    });
   }
 }
