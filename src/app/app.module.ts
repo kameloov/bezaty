@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Camera } from '@ionic-native/camera';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { IonicStorageModule, Storage } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -15,9 +15,9 @@ import { MyApp } from './app.component';
 import { DatabaseProvider } from '../providers/database/database';
 import {SQLitePorter} from '@ionic-native/sqlite-porter';
 import {SQLite} from '@ionic-native/sqlite';
-import { ChartsModule } from 'ng2-charts';
 import {CommonModule} from '@angular/common';
 import { TatisticsManagerProvider } from '../providers/tatistics-manager/tatistics-manager';
+import {LocalNotifications} from '@ionic-native/local-notifications';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function createTranslateLoader(http: HttpClient) {
@@ -44,7 +44,6 @@ export function provideSettings(dbProvider : DatabaseProvider) {
     HttpClientModule,
     CommonModule,
     HttpModule,
-    ChartsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -64,6 +63,7 @@ export function provideSettings(dbProvider : DatabaseProvider) {
     Items,
     User,
     Camera,
+    LocalNotifications,
     SplashScreen,
     StatusBar,
     { provide: Settings, useFactory: provideSettings, deps: [DatabaseProvider] },

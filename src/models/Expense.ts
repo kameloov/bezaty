@@ -1,5 +1,3 @@
-import { NumberFormatStyle } from "@angular/common";
-
 export class Expense {
     id : number;
     category_id : number;

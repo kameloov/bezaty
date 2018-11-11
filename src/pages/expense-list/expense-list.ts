@@ -3,8 +3,6 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { DatabaseProvider } from '../../providers/database/database';
 import { AppSettings } from '../../models/AppSettings';
 import { Stats } from '../../models/Stats';
-import { DailyExpensePage } from '../daily-expense/daily-expense';
-
 
 /**
  * Generated class for the ExpenseListPage page.

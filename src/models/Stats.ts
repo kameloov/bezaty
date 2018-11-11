@@ -1,7 +1,7 @@
 export class Stats {
-    private total: number =0;
-    private spent: number =0;
-    percent: number =0;
+    private total: number = 0;
+    private spent: number = 0;
+    percent: number = 0;
     private equal100: string = '#f02929';
     private above90: string = '#f06829';
     private above75: string = '#f09a29';
@@ -39,6 +39,8 @@ export class Stats {
             color = this.above75;
         if (percent > 90)
             color = this.above90;
+        if (percent == 100)
+            color = this.equal100;
         return color;
     }
 

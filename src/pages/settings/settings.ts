@@ -45,6 +45,7 @@ export class SettingsPage {
   }
 
   public save(){
+    this.translate.use(this.appSettings.language==1?"ar":"en");
     this.settings.saveSettings(this.appSettings);
     this.navCtrl.setRoot('ContentPage');
   }
@@ -94,7 +95,6 @@ public restore(){
 
 public reset(){
   this.loading = true;
-  let s = this .appSettings;
 this.dbProvider.fillDB();
 this.dbProvider.updateSettings(this.appSettings);
 this.showMessage('data base was reset successfully');

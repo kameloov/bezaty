@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, Platform, Loading } from 'ionic-angular';
+import { IonicPage, NavController, Platform} from 'ionic-angular';
 import { Stats } from '../../models/Stats';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Settings } from '../../providers';
+import { TranslateService } from '@ngx-translate/core';
+import { AppSettings } from '../../models/AppSettings';
 @IonicPage()
 @Component({
   selector: 'page-content',
@@ -10,6 +12,7 @@ import { Settings } from '../../providers';
 })
 
 export class ContentPage {
+
 
   width: number = 20;
   radius: number;
@@ -22,9 +25,10 @@ export class ContentPage {
   public fromWeek : string;
   public fromMonth : string;
   public to :string;
+  public appSettings : AppSettings;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider,
-    public settings: Settings, platform: Platform) {
+    public settings: Settings, platform: Platform,public translate :TranslateService) {
       this.loading = true;
       this.daily = new Stats();
       this.weekly = new Stats();
@@ -58,10 +62,12 @@ export class ContentPage {
     if (this.dbReady) {
       this.dbProvider.getSettings().then((data)=>{
         this.total = data.balance;
+        this.appSettings = data;
         let perDay = this.total / this.getDaysCount();
         this.daily.setTotal(perDay);
         this.weekly.setTotal(perDay * 7);
         this.monthly.setTotal(this.total);
+        this.translate.use(data.language==1 ? "ar":"en");
       })
       let d = new Date();
       this.to = this.dateTostr(d);
@@ -76,6 +82,10 @@ export class ContentPage {
       this.dbProvider.getTotalExpense(this.fromMonth, this.to).then((spent) => {
         this.monthly.setSpent(spent ? spent : 0);
       });
+      console.log('to',this.to);
+      console.log('month',this.fromMonth);
+      console.log('week',this.fromWeek);
+
     }
 
 
@@ -106,7 +116,13 @@ export class ContentPage {
 
 
   dateTostr(date : Date){
-    return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    return this.parse(''+date.getFullYear())+'-'+this.parse(''+(date.getMonth()+1))+'-'+this.parse(''+date.getDate());
+  }
+
+  parse(value : string ){
+    let r =  value.length >1 ? value : "0"+value;
+    console.log(r);
+    return r ;
   }
 
 }

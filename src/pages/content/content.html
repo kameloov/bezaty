@@ -1,6 +1,9 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+      <button ion-button menuToggle left>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+    <ion-title>{{'HOME'|translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -8,7 +11,7 @@
   <ion-card>
     <ion-card-header class="crd-header" text-center>
       <div>
-        Summery
+        {{'SUMMERY'|translate}}
       </div>
     </ion-card-header>
     <ion-card-content>
@@ -16,7 +19,7 @@
         <ion-row>
           <ion-col col-4>
             <div text-center>
-              <h3 padding-top>Daily</h3>
+              <h3 padding-top>{{'DAILY'|translate}}</h3>
               <hr>
               <ion-label class="small-text">{{daily.spent+' / '+daily.total.toFixed(2)}}</ion-label>
               <circle-progress *ngIf="daily" [percent]="daily.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
@@ -27,7 +30,7 @@
           </ion-col>
           <ion-col col-4>
             <div text-center>
-              <h3 padding-top>Weekly</h3>
+              <h3 padding-top>{{'WEEKLY'|translate}}</h3>
               <hr>
               <ion-label class="small-text">{{weekly.spent+' / '+weekly.total.toFixed(2)}}</ion-label>
               <circle-progress *ngIf="weekly" [percent]="weekly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
@@ -37,7 +40,7 @@
           </ion-col>
           <ion-col col-4>
             <div text-center>
-              <h3 padding-top> Monthly</h3>
+              <h3 padding-top> {{'MONTHLY'|translate}}</h3>
               <hr>
               <ion-label class="small-text">{{monthly.spent+' / '+monthly.total}}</ion-label>
               <circle-progress *ngIf="monthly" [percent]="monthly.percent" [radius]="(width/6)-16" [outerStrokeWidth]="4"
@@ -54,7 +57,7 @@
   <ion-card>
     <ion-card-header class="crd-header" text-center>
       <div>
-        Quick Access
+        {{'QUICK_ACCESS'|translate}}
       </div>
     </ion-card-header>
     <ion-card-content>
@@ -63,19 +66,19 @@
           <ion-col col-4>
             <div text-center (click)="showCategories()">
               <ion-icon class="list-icon" name="apps"></ion-icon>
-              <p>Categories</p>
+              <p>{{'CATEGORIES'|translate}}</p>
             </div>
           </ion-col>
           <ion-col col-4>
             <div text-center (click)="showAdd(false)">
               <ion-icon class="income-icon" name="arrow-down"></ion-icon>
-              <p>Add Income</p>
+              <p>{{'ADD_INCOME'|translate}}</p>
             </div>
           </ion-col>
           <ion-col col-4>
             <div text-center (click)="showAdd(true)">
               <ion-icon class="expense-icon" name="arrow-up"></ion-icon>
-              <p>Add Expense</p>
+              <p>{{'ADD_EXPENSE'|translate}}</p>
             </div>
           </ion-col>
         </ion-row>

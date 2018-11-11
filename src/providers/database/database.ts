@@ -289,8 +289,9 @@ export class DatabaseProvider {
   }
 
   updateSettings(settings: AppSettings) {
-    let data = [settings.balance, settings.first_day, settings.language, settings.user_email];
-    return this.database.executeSql("UPDATE `settings`  Set balance=?,first_day=?,language=?,user_email=?;", data)
+    let data = [settings.balance, settings.first_day, settings.language, settings.user_email,settings.notification];
+    return this.database.executeSql("UPDATE `settings` "+
+    " Set balance=?,first_day=?,language=?,user_email=?, notification=?;", data)
       .then(data => {
         return data;
       },
@@ -341,10 +342,10 @@ export class DatabaseProvider {
   getTotalExpense(from: string, to: string) {
     return this.database.executeSql("select sum(value) as total from item where item_date between ? and ?", [from, to])
       .then(data => {
-        console.log(JSON.stringify(data));
         let total = -1;
         if (data.rows.length > 0) {
           total = data.rows.item(0)['total'];
+          console.log(total);
         }
         return total;
       },

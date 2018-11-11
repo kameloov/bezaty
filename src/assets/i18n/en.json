@@ -1,6 +1,15 @@
 {
   "BACK_BUTTON_TEXT": "Back",
-
+  "HOME":"Home",
+  "SUMMERY":"Summery",
+  "DAILY":"Daily",
+  "WEEKLY":"Weekly",
+  "MONTHLY":"Monthly",
+  "CATEGORIES":"Categories",
+  "ADD_INCOME":"Add Income",
+  "ADD_EXPENSE":"Ad Expense",
+  "QUICK_ACCESS":"Quick Acces",
+  
   "NAME": "Name",
   "EMAIL": "Email",
   "USERNAME": "Username",

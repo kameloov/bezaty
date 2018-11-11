@@ -4,4 +4,5 @@ export class AppSettings {
     id : number;
     language : number;
     user_email:string;
+    notification : number;
 }

@@ -6,9 +6,11 @@ import { Config, Nav, Platform } from 'ionic-angular';
 import { FirstRunPage } from '../pages';
 import { Settings } from '../providers';
 import { DatabaseProvider } from '../providers/database/database';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+
 
 @Component({
-  template: `<ion-menu [content]="content">
+  template: ` <ion-menu [content]="content" persistent="true">
     <ion-header>
       <ion-toolbar>
         <ion-title>Pages</ion-title>
@@ -27,33 +29,48 @@ import { DatabaseProvider } from '../providers/database/database';
   <ion-nav #content [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage = "";
   @ViewChild(Nav) nav: Nav;
-
   pages: any[] = [
-    { title: 'Welcome', component: 'WelcomePage' },
-    { title: 'Home', component: 'ContentPage' },
+    { title: 'Home', component: 'ContentPage',root :true },
     { title: 'Categories', component: 'ListMasterPage' },
     { title: 'Expenses', component: 'ExpenseListPage',params:{is_expense : true} },
     { title: 'Income', component: 'ExpenseListPage',params:{is_expense : false} },
-    { title: 'Tutorial', component: 'TutorialPage',params:{} },
-    { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Contact us', component: 'SearchPage' }
+    { title: 'Settings', component: 'SettingsPage' }
   ]
   
-  constructor(private translate: TranslateService, platform: Platform,
+  constructor(private translate: TranslateService, platform: Platform,private notification : LocalNotifications,
     public dbProvider:DatabaseProvider, settings: Settings, private config: Config, 
     private statusBar: StatusBar, private splashScreen: SplashScreen) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      platform.pause.subscribe(()=>{
+        console.log(' on pause fired');
+        notification.schedule({
+          id: 0,
+          text: "It's time !",
+          every: 'minute'
+      });
+      });
+      platform.resume.subscribe(()=>{
+        console.log('on resume ');
+        notification.cancelAll();
+      })
+
+      //notification.cancelAll();
       this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#3a8dc2')
-      this.splashScreen.hide();
       this.dbProvider.getDatabaseState().subscribe((ready)=>{
         if (ready){
-         dbProvider.getMaxMinExpenseDates().then((data)=>{
-          //console.log("dates",JSON.stringify(data));
+          this.dbProvider.getSettings().then(data=>{
+            if (data.user_email)
+              this.rootPage = 'ContentPage' 
+              else 
+              this.rootPage = 'WelcomePage'
+              this.splashScreen.hide();
+          },err=>{
+            this.splashScreen.hide();
           })
         }
       })
@@ -91,7 +108,9 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-
+    if (page.root)
     this.nav.setRoot(page.component,page.params);
+    else 
+    this.nav.push(page.component,page.params);
   }
 }

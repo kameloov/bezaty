@@ -1,6 +1,16 @@
 {
   "BACK_BUTTON_TEXT": "رجوع",
 
+  "HOME":"الرئيسية",
+  "SUMMERY":"ملخص",
+  "DAILY":"يومياً",
+  "WEEKLY":"أسبوعياً",
+  "MONTHLY":"شهرياً",
+  "CATEGORIES":"الفئات",
+  "ADD_INCOME":"إضافة مدخول",
+  "ADD_EXPENSE":"إضافة مصروف",
+  "QUICK_ACCESS":"اختصارات سريعة",
+
   "NAME": "الاسم",
   "EMAIL": "البريد الإلكتروني",
   "USERNAME": "اسم المستخدم",

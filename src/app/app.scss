@@ -21,7 +21,7 @@
     height: 100px;
     margin: auto;
     font-weight: bold;
-    color: color($colors,dark);
+    color: #dbc923;
     background-color: transparent;
   }
 
@@ -32,7 +32,27 @@
     height: 100px;
     margin: auto;
     font-weight: bold;
-    color: color($colors,dark);
+    font-weight: bold;
+    color: #dbc923;
     background-color: transparent;
   }
+
+@-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
 
