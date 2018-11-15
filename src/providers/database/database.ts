@@ -276,9 +276,9 @@ export class DatabaseProvider {
 
   ////////////////////////////// Settings ////////////////////////////////
 
-  updateEmail(email: string) {
+  updateEmail(email: string,name : string) {
 
-    return this.database.executeSql("UPDATE `settings`  Set user_email= ?;", [email])
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?;", [email,name])
       .then(data => {
         return data;
       },
@@ -289,9 +289,10 @@ export class DatabaseProvider {
   }
 
   updateSettings(settings: AppSettings) {
-    let data = [settings.balance, settings.first_day, settings.language, settings.user_email,settings.notification];
+    let data = [settings.balance, settings.first_day, settings.language,
+       settings.user_email,settings.notification,settings.user_name,settings.curr];
     return this.database.executeSql("UPDATE `settings` "+
-    " Set balance=?,first_day=?,language=?,user_email=?, notification=?;", data)
+    " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?;", data)
       .then(data => {
         return data;
       },
@@ -312,6 +313,41 @@ export class DatabaseProvider {
       },
         err => {
           console.log("error getting settings");
+          return [];
+        });
+  }
+
+
+  ///////////////////////  currency /////////////////////////////////////
+  getCurrency() {
+    return this.database.executeSql("select * from curr ", [])
+      .then(data => {
+        let curr=[];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let c = data.rows.item(i);
+            curr.push(c);
+          }
+        }
+        return curr;
+      },
+        err => {
+          console.log(err);
+          return [];
+        });
+  }
+
+  getCurrencyByID(id : number) {
+    return this.database.executeSql("select * from curr where id = ?", [id])
+      .then(data => {
+        let curr: any;
+        if (data.rows.length > 0) {
+          curr = data.rows.item(0);
+        }
+        return curr;
+      },
+        err => {
+          console.log("error getting currency");
           return [];
         });
   }

@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { DatabaseProvider } from '../../providers/database/database';
 import { AppSettings } from '../../models/AppSettings';
 import { Stats } from '../../models/Stats';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the ExpenseListPage page.
@@ -28,10 +29,12 @@ export class ExpenseListPage {
   public title: string;
 
   constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
-    public modalCtrl: ModalController, public navParams: NavParams) {
+    public modalCtrl: ModalController, public navParams: NavParams, public translate : TranslateService) {
     this.section = 'day';
     this.is_expense = navParams.get('is_expense');
-    this.title = this.is_expense ? 'Expense' : 'Income';
+    this.translate.get(this.is_expense?'EXPENSE':'INCOME').subscribe(tra=>{
+        this.title = tra;
+    })
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
@@ -43,7 +46,6 @@ export class ExpenseListPage {
       }
     })
   }
-
 
   public getTotal() {
     let total = 0;

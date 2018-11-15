@@ -68,6 +68,7 @@ export class ContentPage {
         this.weekly.setTotal(perDay * 7);
         this.monthly.setTotal(this.total);
         this.translate.use(data.language==1 ? "ar":"en");
+        this.translate.setDefaultLang(data.language==1 ? "ar":"en");
       })
       let d = new Date();
       this.to = this.dateTostr(d);

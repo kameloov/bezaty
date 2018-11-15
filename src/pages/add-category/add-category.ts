@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, ModalController } from 'ionic-angular';
 import { Category } from '../../models/Category';
 import { DatabaseProvider } from '../../providers/database/database';
+import { Currency } from '../../models/Currency';
 
 /**
  * Generated class for the AddCategoryPage page.
@@ -17,8 +18,21 @@ import { DatabaseProvider } from '../../providers/database/database';
 export class AddCategoryPage {
   category: Category;
   edit: boolean;
+  curId: number;
+  currency : Currency;
   constructor(public navCtrl: NavController, private modalCtrl: ModalController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
     console.log(JSON.stringify(navParams));
+    this.curId = navParams.get('curId');
+    dbProvider.getDatabaseState().subscribe(ready=>{
+      if (ready){
+        dbProvider.getCurrencyByID(this.curId).then(data=>{
+          console.log('currency',data);
+          this.currency = data;
+        }).catch(err=>{
+          console.log(err);
+        })
+      }
+    })
     if (this.navParams.get('edit')) {
       this.category = this.navParams.get('cat');
       this.edit = this.navParams.get('edit');
@@ -27,7 +41,7 @@ export class AddCategoryPage {
       this.category.is_expense = this.navParams.get('expense');
     }
   }
-
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddCategoryPage');
   }

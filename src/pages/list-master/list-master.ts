@@ -3,6 +3,7 @@ import { IonicPage, ModalController, NavController } from 'ionic-angular';
 import { Category } from '../../models/Category';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Expense } from '../../models/Expense';
+import { AppSettings } from '../../models/AppSettings';
 @IonicPage()
 @Component({
   selector: 'page-list-master',
@@ -14,12 +15,16 @@ export class ListMasterPage {
   currentItems: Category[];
   expenses: Expense[];
   public type :any;
+  settings : AppSettings;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
    this.type = "1";
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
+        this.dbProvider.getSettings().then(data=>{
+          this.settings = data;
+        })
         if (!this.loaded) {
           this.loadCategories();
           this.loadStatistics();
@@ -41,7 +46,7 @@ export class ListMasterPage {
   }
 
   addCategory() {
-    this.navCtrl.push('AddCategoryPage',{expense : this.type});
+    this.navCtrl.push('AddCategoryPage',{expense : this.type,  curId : this.settings.curr});
   }
   /**
    * The view loaded, let's query our items for the list
@@ -79,7 +84,7 @@ export class ListMasterPage {
     }
 
     editItem(category : Category) {
-      this.navCtrl.push('AddCategoryPage',{'cat':category,'edit':true});
+      this.navCtrl.push('AddCategoryPage',{'cat':category,'edit':true,curId:this.settings.curr});
     }
   /**
    * Navigate to the detail page for this item.
@@ -89,4 +94,5 @@ export class ListMasterPage {
       item: item
     }); */
   }
+  
 }

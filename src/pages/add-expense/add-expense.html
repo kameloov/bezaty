@@ -13,31 +13,31 @@
   <ion-card>
     <ion-card-content>
       <ion-item>
-        <ion-label color="primary">Title : </ion-label>
-        <ion-input type="text" [(ngModel)]="expense.title" placeholder="Enter Title"></ion-input>
+        <ion-label color="primary">{{'TITLE'|translate}} </ion-label>
+        <ion-input type="text" [(ngModel)]="expense.title"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label color="primary">Category : </ion-label>
+        <ion-label color="primary">{{'CATEGORY'|translate}}</ion-label>
         <ion-select [(ngModel)]="expense.category_id" multiple="false" interface="popover">
           <ion-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">Date :</ion-label>
+        <ion-label color="primary">{{'DATE'|translate}}</ion-label>
         <ion-datetime displayFormat="YYYY-MM-DD"  pickerFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">Notes : </ion-label>
-        <ion-textarea type="text" [(ngModel)]="expense.hints" placeholder="Enter Notes"></ion-textarea>
+        <ion-label color="primary">{{'NOTES'|translate}} </ion-label>
+        <ion-textarea type="text" [(ngModel)]="expense.hints" ></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">Amount : </ion-label>
-        <ion-input type="number" [(ngModel)]="expense.value" placeholder="Enter Amount"></ion-input>
+        <ion-label color="primary">{{'AMOUNT'|translate}} </ion-label>
+        <ion-input type="number" [(ngModel)]="expense.value" ></ion-input>
       </ion-item>
       <br>
-      <button ion-button (click)="addExpense()"> {{ getCaption() }}  </button>
-      <button ion-button color="danger" (click)="cancel()">Cancel </button>
+      <button ion-button (click)="addExpense()"> {{ title }}  </button>
+      <button ion-button color="danger" (click)="cancel()">{{'CANCEL_BUTTON'|translate}} </button>
       <br>
     </ion-card-content>
   </ion-card>

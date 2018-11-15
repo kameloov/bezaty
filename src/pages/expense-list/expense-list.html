@@ -9,13 +9,13 @@
     </ion-buttons> -->
     <ion-segment [(ngModel)]="section" color="light">
       <ion-segment-button value="day" (click)="loadData('day')">
-        Daily
+        {{'DAILY'|translate}}
       </ion-segment-button>
       <ion-segment-button value="week" (click)="loadData('week')">
-        Weekly
+        {{'WEEKLY'|translate}}
       </ion-segment-button>
       <ion-segment-button value="month" (click)="loadData('month')">
-        Monthly
+        {{'MONTHLY'|translate}}
       </ion-segment-button>
     </ion-segment>
   </ion-navbar>

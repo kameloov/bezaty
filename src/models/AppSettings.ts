@@ -5,4 +5,6 @@ export class AppSettings {
     language : number;
     user_email:string;
     notification : number;
+    user_name : string;
+    curr :number;
 }

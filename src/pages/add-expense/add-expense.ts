@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { Expense } from '../../models/Expense';
 import { Category } from '../../models/Category';
 import { DatabaseProvider } from '../../providers/database/database';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the AddExpensePage page.
@@ -23,10 +24,20 @@ export class AddExpensePage {
   edit: boolean;
   public isExpense : boolean;
   public title : string;
-  constructor(public navCtrl: NavController, private toastCtrl: ToastController, private dbProvider: DatabaseProvider, public navParams: NavParams) {
-    this.isExpense = navParams.get('is_expense');
+  category_alert_text : string;
+  category_alert_title : string;
+  yes_btn : string;
+  no_btn : string;
+  
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController,public translate : TranslateService,
+     public dbProvider: DatabaseProvider, public navParams: NavParams,public alertCtrl : AlertController) {
+    this.getTranslation();
+      this.isExpense = navParams.get('is_expense');
     this.title = this.isExpense ? 'Add expense ': 'Add income ';
     this.edit = this.navParams.get('edit');
+    translate.get(this.edit?'EDIT':'ADD').subscribe(value=>{
+      this.title = value;
+    })
     if (this.edit) {
       this.expense = navParams.get('exp');
     } else {
@@ -42,6 +53,16 @@ export class AddExpensePage {
         this.loadCategories();
       }
     })
+  }
+
+  getTranslation(){
+    let keys = ['NO_CATEGORY_MSG','ALERT','SHOW_CATEGORY','CANCEL_BUTTON'];
+      this.translate.get(keys).subscribe(res=>{
+        this.category_alert_title = res[keys[1]];
+        this.category_alert_text = res[keys[0]];
+        this.yes_btn = res[keys[2]];
+        this.no_btn = res[keys[3]];
+      })
   }
 
   ionViewDidLoad() {
@@ -114,16 +135,32 @@ export class AddExpensePage {
     });
     toast.present();
   }
-  getCaption(){
-    let caption = "Add";
-    if(this.edit)
-    caption = "Save";
-    return caption;
-  }
 
   ionViewDidEnter() {
     if (this.dbReady)
       this.loadCategories();
   }
 
+  showCategoryAlert(){
+    let alert = this.alertCtrl.create({
+      title: this.category_alert_title,
+      message: this.category_alert_text,
+      buttons: [
+        {
+          text: this.yes_btn,
+          role: 'cancel',
+          handler: () => {
+          
+          }
+        },
+        {
+          text: this.no_btn,
+          handler: () => {
+            this.navCtrl.push('ListMasterPage');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 }

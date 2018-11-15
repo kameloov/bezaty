@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { ExpenseListPage } from './expense-list';
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -9,6 +10,7 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
   ],
   imports: [
     IonicPageModule.forChild(ExpenseListPage),
+    TranslateModule.forChild(),
     NgCircleProgressModule.forRoot({
       "radius": 25,
       "space": -4,

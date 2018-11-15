@@ -1,17 +1,31 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Settings</ion-title>
+    <ion-title>{{'SETTINGS_TITLE'|translate}}</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content >
+<ion-content>
   <ion-card>
     <ion-card-content>
       <ion-item>
-        <ion-label floating >Balance</ion-label>
+        <ion-label floating>{{'NAME'|translate}}</ion-label>
+        <ion-input  type="text" [(ngModel)]="appSettings.user_name"></ion-input>
+      </ion-item>
+      <hr>
+      <ion-item>
+        <ion-label floating>{{'BALANCE'|translate}}</ion-label>
         <ion-input type="number" [(ngModel)]="appSettings.balance"></ion-input>
       </ion-item>
       <hr>
-   <!--    <ion-item>
+      <ion-item>
+        <ion-label floating>{{'CURRENCY'|translate}}</ion-label>
+        <ion-select [(ngModel)]="appSettings.curr" multiple="false" interface="popover">
+          <ion-option *ngFor="let c of currencyList" [value]="c.id">
+            {{appSettings.language==1?c.name_ar : c.name_en}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <hr>
+
+      <!--    <ion-item>
         <ion-label floating>First Day </ion-label>
         <ion-select [(ngModel)]="appSettings.first_day" multiple="false" interface="popover">
           <ion-option *ngFor="let day of days" [value]="day.index">{{day.name}}</ion-option>
@@ -19,14 +33,14 @@
       </ion-item>
       <hr> -->
       <ion-item>
-        <ion-label floating>Language</ion-label>
+        <ion-label floating>{{'LANGUAGE'|translate}}</ion-label>
         <ion-select [(ngModel)]="appSettings.language" multiple="false" interface="popover">
           <ion-option *ngFor="let lang of languages" [value]="lang.value">{{lang.name}}</ion-option>
         </ion-select>
       </ion-item>
       <hr>
       <ion-item>
-        <ion-label floating>Notifications</ion-label>
+        <ion-label floating>{{'NOTIFICATION'|translate}}</ion-label>
         <ion-select [(ngModel)]="appSettings.notification" multiple="false" interface="popover">
           <ion-option value=0>Off</ion-option>
           <ion-option value=1>every day</ion-option>
@@ -36,33 +50,33 @@
         </ion-select>
       </ion-item>
       <hr>
-      <ion-item (click)= "backup()">
-        Backup Database 
+      <ion-item (click)="backup()">
+        {{'BACKUP_DB'|translate}}
       </ion-item>
       <hr>
-      <ion-item (click)= "restore()">
-        Restore Database 
+      <ion-item (click)="restore()">
+        {{'RESTORE_DB'|translate}}
       </ion-item>
-       <hr>
-      <ion-item (click)= "reset()">
-        Remove Database 
+      <hr>
+      <ion-item (click)="reset()">
+        {{'DELETE_DB'|translate}}
       </ion-item>
-    
+
       <ion-item *ngIf="loading">
-        <ion-row  align-items-center text-center>
+        <ion-row align-items-center text-center>
           <ion-col col-12>
             <ion-spinner name="circles"></ion-spinner>
           </ion-col>
         </ion-row>
       </ion-item>
-     <div >
-        <button ion-button  block (click)="save()" margin-top >Save</button>
-     </div>
-      
+      <div>
+        <button ion-button block (click)="save()" margin-top>{{'SAVE_BTN'|translate}}</button>
+      </div>
+
     </ion-card-content>
   </ion-card>
 
 
- 
+
 
 </ion-content>

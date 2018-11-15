@@ -8,6 +8,12 @@
 </ion-header>
 
 <ion-content>
+  <ion-card *ngIf="appSettings">
+    <ion-card-title text-center>
+      {{'WELCOME'|translate}} {{" "+appSettings.user_name}}
+     
+    </ion-card-title>
+  </ion-card>
   <ion-card>
     <ion-card-header class="crd-header" text-center>
       <div>
@@ -52,8 +58,6 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
-
-<br>
   <ion-card>
     <ion-card-header class="crd-header" text-center>
       <div>

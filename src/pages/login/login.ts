@@ -40,7 +40,7 @@ export class LoginPage {
         if(resp['data'][0]['data_file'])
           this.showRestore();
           else
-        this.navCtrl.push(MainPage);
+        this.navCtrl.setRoot(MainPage);
       } else
         this.showMessage(this.loginErrorString);
         this.loading = false;

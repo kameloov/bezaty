@@ -43,7 +43,7 @@ export class User {
       if (res.success == 1) {
         this._user = res.data[0];
         console.log('updating user email ',accountInfo.email);
-        this.db.updateEmail(accountInfo.email).then(data=>{
+        this.db.updateEmail(this._user.email,this._user.name).then(data=>{
           console.log(data);
         },err=>{
           console.log('error ');
@@ -79,7 +79,7 @@ export class User {
       if (res.success == 1) {
         accountInfo.id = res.data;
         this._user = accountInfo;
-        this.db.updateEmail(accountInfo.email);
+        this.db.updateEmail(accountInfo.email,accountInfo.name);
 
       }
     }, err => {

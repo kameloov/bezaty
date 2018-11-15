@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 import { AppSettings } from '../../models/AppSettings';
 import { Day } from '../../models/Day';
 import { Settings, Api } from '../../providers';
 import { DatabaseProvider } from '../../providers/database/database';
+import { Currency } from '../../models/Currency';
 
 /**
  * The Settings page is a simple form that syncs with a Settings provider
@@ -20,99 +21,111 @@ export class SettingsPage {
   // Our local settings object
   public appSettings: AppSettings;
   public days: Day[];
-  public languages : any[];
-  public loading : boolean ;
+  public languages: any[];
+  public currencyList: Currency[];
+  public loading: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,public api : Api,
-    public dbProvider : DatabaseProvider, public translate: TranslateService, 
-    public toastCtrl : ToastController, public settings: Settings) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public api: Api,
+    public dbProvider: DatabaseProvider, public translate: TranslateService,
+    public toastCtrl: ToastController, public settings: Settings, public platform : Platform) {
     this.appSettings = new AppSettings();
-    settings.getSettings().then((s)=>{
-      this.appSettings = s;
-    });
+    this.getCurrencyAndSettings();
     this.days = Array();
-    this.days.push(new Day('Sunday',0));
-    this.days.push(new Day('Monday',1));
-    this.days.push(new Day('Tuesday',2));
-    this.days.push(new Day('Wednesday',3));
-    this.days.push(new Day('Thursday',4));
-    this.days.push(new Day('Friday',5));
-    this.days.push(new Day('Saturday',6));
+    this.days.push(new Day('Sunday', 0));
+    this.days.push(new Day('Monday', 1));
+    this.days.push(new Day('Tuesday', 2));
+    this.days.push(new Day('Wednesday', 3));
+    this.days.push(new Day('Thursday', 4));
+    this.days.push(new Day('Friday', 5));
+    this.days.push(new Day('Saturday', 6));
 
-    this.languages = [{name : 'English', value : 0},{name :'Arabic', value : 1}];
+    this.languages = [{ name: 'English', value: 0 }, { name: 'العربية', value: 1 }];
 
 
   }
 
-  public save(){
-    this.translate.use(this.appSettings.language==1?"ar":"en");
+  public getCurrencyAndSettings() {
+    this.dbProvider.getDatabaseState().subscribe(ready => {
+      this.dbProvider.getCurrency().then(data => {
+        this.currencyList = data;
+        this.settings.getSettings().then((s) => {
+          this.appSettings = s;
+        });
+      })
+    })
+  }
+
+  public save() {
+    this.translate.setDefaultLang(this.appSettings.language == 1 ? "ar" : "en");
+    this.translate.use(this.appSettings.language == 1 ? "ar" : "en");
+    this.platform.setDir(this.appSettings.language==1?'rtl':'ltr',true);
     this.settings.saveSettings(this.appSettings);
     this.navCtrl.setRoot('ContentPage');
   }
 
-public backup(){
-  this.loading = true;
-  this.dbProvider.exportDatabase().then(data=>{
-    console.log(this.appSettings.user_email);
-    this.api.post('data/backup',{email:this.appSettings.user_email,data:JSON.stringify(data)}).subscribe(data=>{
-      console.log(JSON.stringify(data));
-      this.showMessage('backup completed successfully');
+  public backup() {
+    this.loading = true;
+    this.dbProvider.exportDatabase().then(data => {
+      console.log(this.appSettings.user_email);
+      this.api.post('data/backup', { email: this.appSettings.user_email, data: JSON.stringify(data) }).subscribe(data => {
+        console.log(JSON.stringify(data));
+        this.showMessage('backup completed successfully');
+        this.loading = false;
+      },
+        err => {
+          this.loading = false;
+          this.showMessage('error getting database from server ');
+        })
+
+
+    }).catch(err => {
       this.loading = false;
-  },
-  err=>{
-    this.loading = false;
-    this.showMessage('error getting database from server ');
-  })
-  
+      this.showMessage('error exporting dabase ');
+    })
+  }
 
-  }).catch(err=>{
-    this.loading = false;
-    this.showMessage('error exporting dabase ');
-  })
-}
+  public restore() {
+    this.loading = true;
+    console.log('data/' + this.appSettings.user_email);
+    this.api.get('data/' + this.appSettings.user_email).subscribe(data => {
+      if (data) {
+        console.log(JSON.stringify(data));
+        this.dbProvider.importDataBase(data).then(data => {
+          this.showMessage('restore completed successfully');
+          this.loading = false;
+        }, err => {
+          console.log('err', JSON.stringify(err));
+          this.showMessage('restore data  error');
+          this.loading = false;
+        })
+      }
 
-public restore(){
-  this.loading = true;
-  console.log('data/'+this.appSettings.user_email);
- this.api.get('data/'+this.appSettings.user_email).subscribe(data=>{
-   if (data){
-     console.log(JSON.stringify(data));
-     this.dbProvider.importDataBase(data).then(data=>{
-       this.showMessage('restore completed successfully');
-       this.loading = false;
-     },err=>{
-       console.log('err',JSON.stringify(err));
-      this.showMessage('restore data  error');
+    }, err => {
+      this.showMessage('restore network  error');
       this.loading = false;
-     })
-   }
-  
- },err=>{
-  this.showMessage('restore network  error');
-  this.loading = false;
- })
-}
+    })
+  }
 
-public reset(){
-  this.loading = true;
-this.dbProvider.fillDB();
-this.dbProvider.updateSettings(this.appSettings);
-this.showMessage('data base was reset successfully');
-this.loading = false;
-}
+  public reset() {
+    this.loading = true;
+    this.dbProvider.fillDB();
+    this.dbProvider.updateSettings(this.appSettings);
+    this.showMessage('data base was reset successfully');
+    this.loading = false;
+  }
 
 
-showMessage(msg: string) {
-  let toast = this.toastCtrl.create({
-    message: msg,
-    duration: 3000,
-    position: 'top'
-  });
-  toast.present();
-}
+  showMessage(msg: string) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
+  }
 
-   ionViewDidEnter() {
-    this.settings.getSettings().then((s)=>{
+  ionViewDidEnter() {
+    this.settings.getSettings().then((s) => {
       console.log(JSON.stringify(s));
       this.appSettings = s;
     });
