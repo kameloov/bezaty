@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Categories</ion-title>
+    <ion-title>{{'CATEGORY_TITLE'|translate}}</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="addCategory()">
         <ion-icon name="add"></ion-icon>
@@ -13,16 +13,29 @@
   <div padding-bottom>
     <ion-segment color="primary" [(ngModel)]="type">
       <ion-segment-button value="0" (click)="setKind(type)">
-        Income <ion-icon name="arrow-down" color="secondary"></ion-icon>
+        {{'INCOME'|translate}} <ion-icon name="arrow-down" color="secondary"></ion-icon>
       </ion-segment-button>
       <ion-segment-button (click)="setKind(type)" value="1">
-        Expense <ion-icon name="arrow-up" color="danger"></ion-icon>
+        {{'EXPENSE'|translate}} <ion-icon name="arrow-up" color="danger"></ion-icon>
       </ion-segment-button>
     </ion-segment>
   </div>
   <ion-list>
+
+    <ion-grid *ngIf="currentItems && currentItems.length>0 && !this.shownBefore" padding class="swipe-bg" text-center>
+      <ion-row>
+        <ion-col col-12>
+            <img src="assets/img/first.png"  [ngClass]="{'slide':settings.language==0,'slide-right':settings.language==1}" />
+            {{'TUTORIAL_SLIDE2_TITLE'|translate}}
+        </ion-col>
+       <!--  <ion-col col-2>
+          <button ion-button outline small>ok</button>
+        </ion-col> -->
+      </ion-row>
+        
+    </ion-grid>
     <ion-item-sliding *ngFor="let item of currentItems">
-      <div ion-item (click)="openItem(item)">
+      <div ion-item >
         <ion-grid>
           <ion-row align-items-center>
             <ion-col col-3>

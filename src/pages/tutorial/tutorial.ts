@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, MenuController, NavController, Platform } from 'ionic-angular';
 
 import { TranslateService } from '@ngx-translate/core';
+import { ContentPage } from '../content/content';
 
 export interface Slide {
   title: string;
@@ -27,6 +28,8 @@ export class TutorialPage {
       "TUTORIAL_SLIDE2_DESCRIPTION",
       "TUTORIAL_SLIDE3_TITLE",
       "TUTORIAL_SLIDE3_DESCRIPTION",
+      "TUTORIAL_SLIDE4_TITLE",
+      "TUTORIAL_SLIDE4_DESCRIPTION",
     ]).subscribe(
       (values) => {
         console.log('Loaded values', values);
@@ -34,24 +37,29 @@ export class TutorialPage {
           {
             title: values.TUTORIAL_SLIDE1_TITLE,
             description: values.TUTORIAL_SLIDE1_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-1.png',
+            image: 'assets/img/languages.png',
           },
           {
             title: values.TUTORIAL_SLIDE2_TITLE,
             description: values.TUTORIAL_SLIDE2_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-2.png',
+            image: 'assets/img/swipe.png',
           },
           {
             title: values.TUTORIAL_SLIDE3_TITLE,
             description: values.TUTORIAL_SLIDE3_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-3.png',
+            image: 'assets/img/charts.png',
+          },
+          {
+            title: values.TUTORIAL_SLIDE4_TITLE,
+            description: values.TUTORIAL_SLIDE4_DESCRIPTION,
+            image: 'assets/img/settings.png',
           }
         ];
       });
   }
 
   startApp() {
-    this.navCtrl.setRoot('WelcomePage', {}, {
+    this.navCtrl.setRoot('ContentPage', {}, {
       animate: true,
       direction: 'forward'
     });

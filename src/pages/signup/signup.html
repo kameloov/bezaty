@@ -9,12 +9,12 @@
   <ion-card>
     <ion-card-content>
       <form (submit)="doSignup()">
-        <ion-item padding>
-          <ion-label color="primary">{{ 'NAME' | translate }}</ion-label>
+        <ion-item >
+          <ion-label color="primary" floating>{{ 'NAME' | translate }}</ion-label>
           <ion-input type="text" [(ngModel)]="account.name" name="name"></ion-input>
         </ion-item>
-        <ion-item padding>
-          <ion-label color="primary">{{ 'EMAIL' | translate }}</ion-label>
+        <ion-item >
+          <ion-label color="primary" floating>{{ 'EMAIL' | translate }}</ion-label>
           <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
         </ion-item>
         <!--
@@ -25,12 +25,12 @@
               <ion-input type="text" [(ngModel)]="account.username" name="username"></ion-input>
             </ion-item>
             -->
-        <ion-item padding>
-          <ion-label color="primary">{{ 'PASSWORD' | translate }}</ion-label>
+        <ion-item >
+          <ion-label color="primary" floating>{{ 'PASSWORD' | translate }}</ion-label>
           <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
         </ion-item>
-        <ion-item padding>
-          <ion-label color="primary">{{ 'CONFIRM_PASSWORD' | translate }}</ion-label>
+        <ion-item >
+          <ion-label color="primary" floating>{{ 'CONFIRM_PASSWORD' | translate }}</ion-label>
           <ion-input type="password" [(ngModel)]="confirm" name="password"></ion-input>
         </ion-item>
         <div padding >

@@ -74,7 +74,7 @@ export class PeriodicChartsPage {
     this.periodic.forEach(element => {
       values.push(element.total);
     });
-    this.chartData = [{ label: this.section, data: values }];
+    this.chartData = [{ label: " ", data: values }];
   }
 
 

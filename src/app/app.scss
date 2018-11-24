@@ -14,6 +14,10 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.exit-btn{
+  color: color($colors,'danger');
+}
+
 .btn-gold {
     background: url('../assets/img/btnGold.png') transparent;
     background-size: 100%;

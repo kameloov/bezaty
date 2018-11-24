@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Generated class for the StatisticsPage page.
@@ -21,16 +22,16 @@ export class StatisticsPage {
   data: any[];
   fromDate: string = '2018-5-01';
   toDate: string = '2018-11-07';
-  public chartData: any = [{ data: [0, 0, 0, 0], label: "daily" }];
+  public chartData: any = [{ data: [0, 0, 0, 0], label: "" }];
   public chartLabels: any;
-  public loading: boolean
+  public loading: boolean = true;
   public empty: boolean;
   public width: number = 0;
   public height: number = 0;
   public chartType :string = 'bar';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform,
-    private dbProvider: DatabaseProvider) {
+    private dbProvider: DatabaseProvider,public translate : TranslateService) {
     this.fromDate = navParams.get('fromDate');
     this.toDate = navParams.get('toDate');
     platform.ready().then(res => {
@@ -68,7 +69,7 @@ export class StatisticsPage {
     this.data.forEach(element => {
       values.push(element.total);
     });
-    this.chartData = [{ label: "daily", data: values }];
+    this.chartData = [{ label: "", data: values }];
   }
 
 

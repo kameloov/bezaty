@@ -77,9 +77,13 @@ export class User {
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {
+        this.db.fillDB();
         accountInfo.id = res.data;
         this._user = accountInfo;
-        this.db.updateEmail(accountInfo.email,accountInfo.name);
+        this.db.getDatabaseState().subscribe(ready=>{
+          if (ready)
+          this.db.updateEmail(accountInfo.email,accountInfo.name);
+        })
 
       }
     }, err => {
@@ -94,6 +98,10 @@ export class User {
    */
   logout() {
     this._user = null;
+  }
+
+  isFirstUse(){
+  
   }
 
 }

@@ -9,10 +9,10 @@
 
 <ion-content>
   <ion-card *ngIf="appSettings">
-    <ion-card-title text-center>
+    <ion-card-header class="welcome" text-center>
       {{'WELCOME'|translate}} {{" "+appSettings.user_name}}
      
-    </ion-card-title>
+    </ion-card-header>
   </ion-card>
   <ion-card>
     <ion-card-header class="crd-header" text-center>

@@ -16,6 +16,7 @@ export class ListMasterPage {
   expenses: Expense[];
   public type :any;
   settings : AppSettings;
+  public shownBefore :boolean;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider, public modalCtrl: ModalController) {
    this.type = "1";
@@ -27,7 +28,7 @@ export class ListMasterPage {
         })
         if (!this.loaded) {
           this.loadCategories();
-          this.loadStatistics();
+          this.getHintShown();
           this.loaded = true;
         }
         //this.addTestCategory();
@@ -54,26 +55,30 @@ export class ListMasterPage {
   ionViewDidLoad() {
   }
 
-  loadStatistics(){
-    this.dbProvider.getCategoricExpenses("2018-08-01","2018-11-07").then(data => {
-      console.log(JSON.stringify(data));
-    });
+
+
+  getHintShown(){
+    this.dbProvider.hintShown().then(shown=>{
+      this.shownBefore = shown;
+    })
   }
-
   ionViewDidEnter() {
-
+    setTimeout(()=>{
+      if (this.shouldShowHint()){
+        this.shownBefore = true;
+        this.dbProvider.setHintShown();
+      }
+    },2500);
     if (this.dbReady) {
       this.loaded = true;
         this.loadCategories();
-       this.loadStatistics();
+      this.getHintShown();
     }
   }
 
-  /**
-   * Prompt the user to add a new item. This shows our ItemCreatePage in a
-   * modal and then adds the new item to our data source if the user created one.
-   */
-
+  shouldShowHint(){
+    return ( this.currentItems && this.currentItems.length>0 && !this.shownBefore)
+  }
   /**
    * Delete an item from the list of items.
    */
@@ -86,13 +91,5 @@ export class ListMasterPage {
     editItem(category : Category) {
       this.navCtrl.push('AddCategoryPage',{'cat':category,'edit':true,curId:this.settings.curr});
     }
-  /**
-   * Navigate to the detail page for this item.
-   */
-  openItem(item: Category) {
-  /*   this.navCtrl.push('ItemDetailPage', {
-      item: item
-    }); */
-  }
-  
+    
 }

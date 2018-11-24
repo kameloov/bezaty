@@ -6,35 +6,40 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>add Category</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 </ion-header>
+
 
 <ion-content>
   <ion-card>
     <ion-card-content>
       <div>
         <ion-card-content text-center>
-            <button ion-button color="secondary" (click)="showIcons()" *ngIf="!category.icon">Select icon</button>
-            <ion-icon class="list-icon"   (click)="showIcons()" [name]="category.icon" *ngIf="category.icon" ></ion-icon>
+          <button ion-button color="secondary" (click)="showIcons()" *ngIf="!category.icon">{{'SELECT_ICON'|translate}}</button>
+          <ion-icon class="list-icon" (click)="showIcons()" [name]="category.icon" *ngIf="category.icon"></ion-icon>
         </ion-card-content>
       </div>
       <ion-item>
-        <ion-label color="primary">Title : </ion-label>
-        <ion-input type="text" [(ngModel)]="category.name"></ion-input>
+        <ion-label color="primary" fixed>{{'TITLE'|translate}}</ion-label>
+        <ion-input *ngIf="right" text-right type="text" [(ngModel)]="category.name"></ion-input>
+        <ion-input *ngIf="!right" text-left type="text" [(ngModel)]="category.name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">Notes : </ion-label>
-        <ion-textarea type="text" [(ngModel)]="category.details" ></ion-textarea>
+        <ion-label color="primary" fixed>{{'NOTES'|translate}}</ion-label>
+        <ion-textarea *ngIf="right" text-right type="text" [(ngModel)]="category.details"></ion-textarea>
+        <ion-textarea *ngIf="!right" text-left type="text" [(ngModel)]="category.details"></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">Balance : </ion-label>
-        <ion-input type="number" [(ngModel)]="category.balance" [placeholder]="currency.symbol_en"></ion-input>
+        <ion-label color="primary" fixed>{{'MONTHLY'|translate}} ({{' '+currency.symbol_en+' '}})</ion-label>
+        <ion-input *ngIf="right" text-right type="number" [(ngModel)]="category.balance"></ion-input>
+        <ion-input *ngIf="!right" text-left type="number" [(ngModel)]="category.balance"></ion-input>
       </ion-item>
       <br>
-      <button ion-button (click)="addCategory()"> {{getCaption()}}</button>
-      <button ion-button color="danger" (click)="cancel()">Cancel </button>
-      <br>
+      <ion-item>
+        <button ion-button default (click)="addCategory()"> {{'SAVE_BTN'|translate}}</button>
+        <button ion-button default  color="danger" (click)="cancel()">{{'CANCEL_BUTTON'|translate}} </button>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 </ion-content>

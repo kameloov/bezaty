@@ -96,6 +96,18 @@ export class DatabaseProvider {
         })
   }
 
+  hintShown(){
+     return this.storage.get('hint_shown').then(data=>{
+      return data;
+    })
+  }
+
+  setHintShown(){
+    this.storage.set('hint_shown',true);
+  }
+
+  setF
+
   getCategories(isExpense: number) {
     return this.database.executeSql("select * from category  where is_expense =? order by id desc", [isExpense])
       .then(data => {
@@ -290,9 +302,9 @@ export class DatabaseProvider {
 
   updateSettings(settings: AppSettings) {
     let data = [settings.balance, settings.first_day, settings.language,
-       settings.user_email,settings.notification,settings.user_name,settings.curr];
+       settings.user_email,settings.notification,settings.user_name,settings.curr,settings.curr_symbol];
     return this.database.executeSql("UPDATE `settings` "+
-    " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?;", data)
+    " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?, curr_symbol=? ;", data)
       .then(data => {
         return data;
       },
@@ -474,6 +486,43 @@ export class DatabaseProvider {
      return null;
     });
   }
+  ////////////////////////// history //////////////////////////////////
+  
+  
+  getHistory(s : String) {
+    return this.database.executeSql("select * from history  where text like ? ;", ["%"+s+"%"])
+   // return this.database.executeSql("select * from history ;", [])
+      .then(data => {
+        let categories = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let category = data.rows.item(i);
+            categories.push(category);
+          }
+        }
+        return categories;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return [];
+        });
+  }
+
+
+  addHistory(text :String) {
+    let data = [null, text];
+    return this.database.executeSql("REPLACE INTO `history` (id,text) VALUES (?,?);", data)
+      .then(data => {
+        console.log(JSON.stringify((data)));
+        return data;
+      },
+        err => {
+          console.log("error adding history",JSON.stringify(err));
+          return err;
+        })
+  }
+
+
   ////////////////////////// export database ////////////////////////////
 
   exportDatabase() {

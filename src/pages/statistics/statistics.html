@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>statistics</ion-title>
+    <ion-title>{{'STATS_TITLE'|translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,7 +20,7 @@
     </ion-col>
   </ion-row>
 
-  <div class="row" *ngIf="!loading">
+  <div class="row" *ngIf="!loading &&chartData">
     <div class="col-md-12">
       <div style="display: block;">
         <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="ChartOptions" [legend]="true" width="width"
@@ -29,15 +29,15 @@
     </div>
   </div>
 
-  <ion-row>
+  <ion-row *ngIf="!loading &&chartData" padding>
     <ion-col col-4>
-      <button ion-button block (click)="chartType ='radar'">Radar</button>
+      <button ion-button block (click)="chartType ='radar'">{{'RADAR_BTN'|translate}}</button>
     </ion-col>
     <ion-col col-4>
-      <button ion-button block (click)="chartType ='polarArea'">polar Area</button>
+      <button ion-button block (click)="chartType ='polarArea'"> {{'POLAR_BTN'|translate}}</button>
     </ion-col>
     <ion-col col-4>
-      <button ion-button block (click)="chartType ='doughnut'">Daughnats</button>
+      <button ion-button block (click)="chartType ='doughnut'">{{'DAUGHNATS_BTN'|translate}}</button>
     </ion-col>
   </ion-row>
 </ion-content>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Expense } from '../../models/Expense';
+import { AppSettings } from '../../models/AppSettings';
 
 /**
  * Generated class for the DailyExpensePage page.
@@ -23,14 +24,17 @@ export class DailyExpensePage {
   public period : string;
   public is_expense : boolean ; 
   public type : string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider : DatabaseProvider) {
+  public settings : AppSettings;
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+     public dbProvider : DatabaseProvider) {
     this.is_expense = navParams.get('is_expense');
     this.type = navParams.get('type');
     this.period = navParams.get('value');
     dbProvider.getDatabaseState().subscribe(ready=>{
       if (ready){
       this.dbReady = true; 
-      this.loadData()
+      this.loadData();
+      this.getSettings();
       }
 
     })
@@ -42,8 +46,11 @@ export class DailyExpensePage {
     });
   }
 
+
+
   addExpense() {
-    this.navCtrl.push('AddExpensePage',{is_expense:this.is_expense});
+
+    this.navCtrl.push('AddExpensePage',{is_expense:this.is_expense, curId : this.settings.curr});
   }
 
 
@@ -60,15 +67,24 @@ export class DailyExpensePage {
   }
 
   editItem(expense: Expense) {
-    this.navCtrl.push('AddExpensePage', { is_expense : this.is_expense,'exp': expense, 'edit': true });
+    
+    this.navCtrl.push('AddExpensePage', { is_expense : this.is_expense,'exp': expense, 'edit': true, curId : this.settings.curr });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DailyExpensePage');
   }
   ionViewDidEnter() {
-    if (this.dbReady)
+    if (this.dbReady){
       this.loadData();
+      this.getSettings();
+    }
+  }
+
+  getSettings(){
+    this.dbProvider.getSettings().then(data=>{
+        this.settings = data;
+      })
   }
 
 }

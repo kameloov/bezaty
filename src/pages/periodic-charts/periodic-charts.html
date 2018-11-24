@@ -9,13 +9,13 @@
   <ion-navbar>
     <ion-segment [(ngModel)]="section" color="light">
       <ion-segment-button value="day" (click)="loadData('day')">
-        Daily
+        {{'DAILY'|translate}}
       </ion-segment-button>
       <ion-segment-button value="week" (click)="loadData('week')">
-        Weekly
+        {{'WEEKLY'|translate}}
       </ion-segment-button>
       <ion-segment-button value="month" (click)="loadData('month')">
-        Monthly
+        {{'MONTHLY'|translate}}
       </ion-segment-button>
     </ion-segment>
   </ion-navbar>
@@ -35,15 +35,15 @@
       </div>
     </div>
   </div>
-        <ion-row>
+        <ion-row padding>
             <ion-col col-4>
-              <button ion-button  block (click)="chartType ='line'">Line</button>
+              <button ion-button  block (click)="chartType ='line'">{{'LINE_BTN'|translate}}</button>
             </ion-col>
             <ion-col col-4>
-              <button ion-button block (click)="chartType ='bar'">Bar</button>
+              <button ion-button block (click)="chartType ='bar'">{{'BAR_BTN'|translate}}</button>
             </ion-col>
             <ion-col col-4>
-              <button ion-button block (click)="chartType ='doughnut'">Daughnats</button>
+              <button ion-button block (click)="chartType ='doughnut'">{{'DAUGHNATS_BTN'|translate}}</button>
             </ion-col>
           </ion-row>
 </ion-content>

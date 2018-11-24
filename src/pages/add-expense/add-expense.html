@@ -13,27 +13,40 @@
   <ion-card>
     <ion-card-content>
       <ion-item>
-        <ion-label color="primary">{{'TITLE'|translate}} </ion-label>
-        <ion-input type="text" [(ngModel)]="expense.title"></ion-input>
+        <ion-label color="primary" fixed>{{'TITLE'|translate}} </ion-label>
+        <ion-input class="input-pad" *ngIf= "right" type="text" text-right (input)="openSugestion($event)"  [(ngModel)]="expense.title"></ion-input>
+        <ion-input class="input-pad" *ngIf= "!right" type="text"text-left (input)="openSugestion($event)"  [(ngModel)]="expense.title"></ion-input>
       </ion-item>
-
+      <div *ngIf= "editing" padding>
+        <div class="small-text" *ngFor="let s of suggestions" (click)="selectSuggestion(s.text)">{{s.text}}<hr></div>
+      </div>
       <ion-item>
-        <ion-label color="primary">{{'CATEGORY'|translate}}</ion-label>
-        <ion-select [(ngModel)]="expense.category_id" multiple="false" interface="popover">
+        <ion-label color="primary" fixed>{{'CATEGORY'|translate}}</ion-label>
+        <ion-select *ngIf="right" text-right [(ngModel)]="expense.category_id" multiple="false" interface="popover">
+          <ion-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-option>
+        </ion-select>
+        <ion-select *ngIf="!right" text-left [(ngModel)]="expense.category_id" multiple="false" interface="popover">
           <ion-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">{{'DATE'|translate}}</ion-label>
-        <ion-datetime displayFormat="YYYY-MM-DD"  pickerFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
+        <ion-label color="primary" fixed>{{'DATE'|translate}}</ion-label>
+        <ion-datetime *ngIf="right" text-right displayFormat="YYYY-MM-DD"  pickerFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
+        <ion-datetime *ngIf="!right" text-left displayFormat="YYYY-MM-DD"  pickerFormat="YYYY-MM-DD" [(ngModel)]="expense.item_date"></ion-datetime>
+      </ion-item>
+      <div padding *ngIf="isFuture()">
+        <ion-label  color="danger">{{'FUTURE_DATE'|translate}}</ion-label> 
+      </div>
+      
+      <ion-item>
+        <ion-label color="primary" fixed>{{'NOTES'|translate}} </ion-label>
+        <ion-textarea class="input-pad" *ngIf= "right" text-right [(ngModel)]="expense.hints" (input)="openSugestion($event)" ></ion-textarea>
+        <ion-textarea class="input-pad" *ngIf= "!right" text-left [(ngModel)]="expense.hints"(input)="openSugestion($event)" ></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label color="primary">{{'NOTES'|translate}} </ion-label>
-        <ion-textarea type="text" [(ngModel)]="expense.hints" ></ion-textarea>
-      </ion-item>
-      <ion-item>
-        <ion-label color="primary">{{'AMOUNT'|translate}} </ion-label>
-        <ion-input type="number" [(ngModel)]="expense.value" ></ion-input>
+        <ion-label color="primary" fixed>{{'AMOUNT'|translate}} ({{' '+currency.symbol_en+' '}}) </ion-label>
+        <ion-input class="input-pad"  *ngIf="right" text-right type="number"  [(ngModel)]="expense.value" ></ion-input>
+        <ion-input  class="input-pad" *ngIf="!right" text-left type="number"  [(ngModel)]="expense.value" ></ion-input>
       </ion-item>
       <br>
       <button ion-button (click)="addExpense()"> {{ title }}  </button>

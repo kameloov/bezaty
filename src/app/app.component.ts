@@ -2,24 +2,22 @@ import { Component, ViewChild } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Config, Nav, Platform, AlertController, Alert } from 'ionic-angular';
+import { Config, Nav, Platform, AlertController, Alert, ModalController } from 'ionic-angular';
 import { Settings } from '../providers';
 import { DatabaseProvider } from '../providers/database/database';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications';
-import { DefaultPage } from '../pages/default/default';
-
 
 @Component({
-  template: ` <ion-menu [content]="content" persistent="true">
+  template: ` <ion-menu [content]="content" [attr.side]="this.platform.dir()=='ltr'?'left':'right' " persistent="true">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Pages</ion-title>
+        <ion-title></ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
       <ion-list>
-        <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        <button menuClose [ngClass]="{'exit-btn':p.exit==true}" ion-item *ngFor="let p of pages" (click)="openPage(p)">
           {{p.title|translate}}
         </button>
       </ion-list>
@@ -32,33 +30,33 @@ export class MyApp {
   rootPage = 'DefaultPage';
   public alerted: boolean;
   public alert: Alert;
-
+  public side: string = "left"
   reminder_msg: string;
   @ViewChild(Nav) nav: Nav;
   pages: any[] = [
-    { title:'MENU_HOME', component: 'ContentPage', root: true },
+    { title: 'MENU_HOME', component: 'ContentPage', root: true },
     { title: 'MENU_CATEGORY', component: 'ListMasterPage' },
-    { title:'MENU_EXPENSE', component: 'ExpenseListPage', params: { is_expense: true } },
-    { title:'MENU_INCOME', component: 'ExpenseListPage', params: { is_expense: false } },
+    { title: 'MENU_EXPENSE', component: 'ExpenseListPage', params: { is_expense: true } },
+    { title: 'MENU_INCOME', component: 'ExpenseListPage', params: { is_expense: false } },
     { title: 'MENU_SETTINGS', component: 'SettingsPage' },
-    { title: 'MENU_EXIT', component: 'WelcomePage', root: true }
+    { title: 'MENU_EXIT', component: 'WelcomePage', root: true, exit: true }
   ]
-
   constructor(private translate: TranslateService, public platform: Platform, public notification: LocalNotifications,
     public dbProvider: DatabaseProvider, public settings: Settings, private config: Config,
     private statusBar: StatusBar, private splashScreen: SplashScreen, public alertCtrl: AlertController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+
       platform.pause.subscribe(() => {
         console.log(' on pause fired');
         this.settings.getSettings().then(data => {
           if (data.notification > 0) {
-            translate.get('NOTIFICATION_MSG').subscribe(data => {
+            translate.get('NOTIFICATION_MSG').subscribe(msg => {
               notification.schedule({
                 id: 1,
-                text: 'hello',
-                trigger: { every: data.notification, unit: ELocalNotificationTriggerUnit.MINUTE }
+                text: msg,
+                trigger: { every: data.notification, unit: ELocalNotificationTriggerUnit.DAY }
               });
             })
 
@@ -72,16 +70,18 @@ export class MyApp {
         notification.cancelAll();
       })
 
-      platform.registerBackButtonAction(() => {
-        if (this.alerted) {
-          this.alert.dismiss();
-        } else {
-          if (this.nav.length() == 1) {
-            this.showConfirm();
-          }
-          this.alerted = true;
-        }
-      })
+      /*     platform.registerBackButtonAction(() => {
+            if (this.alerted) {
+              this.alert.dismiss();
+              this.alerted = false;
+            } else {
+              if (this.nav.getActive().name=='ContentPage') {
+                this.showConfirm();
+                this.alerted = true;
+              } else 
+              return false;
+            }
+          }) */
 
       //notification.cancelAll();
       this.statusBar.styleDefault();
@@ -89,8 +89,16 @@ export class MyApp {
       this.dbProvider.getDatabaseState().subscribe((ready) => {
         if (ready) {
           this.dbProvider.getSettings().then(data => {
-            if (data.user_email)
+            if (data.user_email) {
+             /*  storage.get('first_run').then(data => {
+                if (!data) {
+                  this.rootPage = 'TutorialPage';
+                  storage.setItem('first_run', 'no');
+                } else
+                  this.rootPage = 'ContentPage'
+              }); */
               this.rootPage = 'ContentPage'
+            }
             else
               this.rootPage = 'WelcomePage'
             this.splashScreen.hide();
@@ -105,34 +113,13 @@ export class MyApp {
 
   }
 
-  showConfirm() {
-    this.alert = this.alertCtrl.create({
-      title: 'Exit ?',
-      message: 'Are you sure you want  to exit ?',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel',
-          handler: () => {
-
-          }
-        },
-        {
-          text: 'Yes',
-          handler: () => {
-            this.platform.exitApp();
-          }
-        }
-      ]
-    });
-    this.alert.present();
-  }
-
   initTranslate() {
     const browserLang = this.translate.getBrowserLang();
     this.settings.getSettings().then(data => {
-      this.translate.setDefaultLang(data.language == 0 ? "en" : "ar");
       this.platform.setDir(data.language == 1 ? 'rtl' : 'ltr', true);
+      this.translate.setDefaultLang(data.language == 0 ? "en" : "ar");
+      this.translate.use(data.language == 0 ? "en" : "ar");
+      this.side = data.language == 1 ? 'right' : 'left';
       console.log("language ", data.language);
     })
     /*     if (browserLang) {
@@ -147,7 +134,7 @@ export class MyApp {
     this.translate.get(keys).subscribe(values => {
       console.log(JSON.stringify(values));
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
-     
+
     });
   }
 

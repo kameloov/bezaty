@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, MenuController, Platform } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
+import { Settings } from '../../providers';
+import { AppSettings } from '../../models/AppSettings';
 
 /**
  * The Welcome Page is a splash page that quickly describes the app,
@@ -14,9 +17,15 @@ import { IonicPage, NavController, MenuController } from 'ionic-angular';
 })
 export class WelcomePage {
 
+  appSettings : AppSettings;
   showButtons : boolean = false;
 
-  constructor(public navCtrl: NavController,public menu : MenuController) { }
+  constructor(public navCtrl: NavController,public menu : MenuController,public translate :TranslateService,
+    public settings : Settings, public platform : Platform) {
+      settings.getSettings().then(data=>{
+          this.appSettings = data;
+      })
+     }
 
   login() {
     this.navCtrl.push('LoginPage');
@@ -38,5 +47,14 @@ export class WelcomePage {
   ionViewWillLeave() {
     // enable the root left menu when leaving the tutorial page
     this.menu.enable(true);
+  }
+
+  public changeLang(language : number){
+    console.log('settings',JSON.stringify(this.appSettings));
+    this.platform.setDir(language==1?'rtl':'ltr',true);
+    this.translate.setDefaultLang(language == 1 ? "ar" : "en");
+    this.translate.use(language == 1 ? "ar" : "en");
+    this.appSettings.language = language;
+    this.settings.saveSettings(this.appSettings);
   }
 }

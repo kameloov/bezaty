@@ -7,4 +7,5 @@ export class AppSettings {
     notification : number;
     user_name : string;
     curr :number;
+    curr_symbol:string;
 }

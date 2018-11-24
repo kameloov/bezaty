@@ -4,6 +4,8 @@ import { IonicPage, NavController, ToastController, MenuController } from 'ionic
 import { User } from '../../providers';
 import { MainPage } from '../';
 import { Account } from '../../models/Account';
+import { TutorialPage } from '../tutorial/tutorial';
+import { DatabaseProvider } from '../../providers/database/database';
 
 @IonicPage()
 @Component({
@@ -19,38 +21,47 @@ export class SignupPage {
   public loading  : boolean ;
   // Our translated text strings
   private signupErrorString: string;
+  private register_uccess:string;
+  private password_mismatch : string;
+  private already_registered;
 
   constructor(public navCtrl: NavController,public menu :MenuController,
-    public user: User,
+    public user: User, public dbProvider : DatabaseProvider,
     public toastCtrl: ToastController,
     public translateService: TranslateService) {
       this.account = new Account();
-    this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
-      this.signupErrorString = value;
+      let keys =['SIGNUP_ERROR','REGISTER_SUCCESS',
+      'PASSWORD_MISMATCH','ALREADY_REGISTERED'];
+    this.translateService.get(keys).subscribe((value) => {
+      this.signupErrorString = value.SIGNUP_ERROR;
+      this.register_uccess=value.REGISTER_SUCCESS;
+      this.password_mismatch = value.PASSWORD_MISMATCH;
+      this.already_registered = value.ALREADY_REGISTERED;
+
     })
   }
 
   doSignup() {
     // Attempt to login in through our User service
     if (this.confirm!=this.account.password){
-      this.showMEssage('Password and confirmation does not match ');
+      this.showMEssage(this.password_mismatch);
       return;
     }
 
+    
     this.loading = true;
     this.user.signup(this.account).subscribe((resp) => {
       if (resp['data']){
-
-      this.navCtrl.push(MainPage);
-      this.showMEssage('Registered Successfully');
+      this.navCtrl.setRoot('TutorialPage');
+      this.showMEssage(this.register_uccess);
       }
       else {
-          this.showMEssage(resp['code']==11?'You are already registered , please login instead':this.signupErrorString);
+          this.showMEssage(resp['code']==11?this.already_registered:this.signupErrorString);
       }
       this.loading = false;
     }, (err) => {
 
-      this.navCtrl.push(MainPage);
+      //this.navCtrl.push(MainPage);
 
       // Unable to sign up
       this.showMEssage(this.signupErrorString);

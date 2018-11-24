@@ -8,12 +8,14 @@
     <ion-card-content>
       <ion-item>
         <ion-label floating>{{'NAME'|translate}}</ion-label>
-        <ion-input  type="text" [(ngModel)]="appSettings.user_name"></ion-input>
+        <ion-input *ngIf="right" text-right type="text" [(ngModel)]="appSettings.user_name"></ion-input>
+        <ion-input *ngIf="!right" text-left type="text" [(ngModel)]="appSettings.user_name"></ion-input>
       </ion-item>
       <hr>
       <ion-item>
         <ion-label floating>{{'BALANCE'|translate}}</ion-label>
-        <ion-input type="number" [(ngModel)]="appSettings.balance"></ion-input>
+        <ion-input *ngIf="right" text-right  type="number" [(ngModel)]="appSettings.balance"></ion-input>
+        <ion-input *ngIf="!right" text-left  type="number" [(ngModel)]="appSettings.balance"></ion-input>
       </ion-item>
       <hr>
       <ion-item>
@@ -42,23 +44,23 @@
       <ion-item>
         <ion-label floating>{{'NOTIFICATION'|translate}}</ion-label>
         <ion-select [(ngModel)]="appSettings.notification" multiple="false" interface="popover">
-          <ion-option value=0>Off</ion-option>
-          <ion-option value=1>every day</ion-option>
-          <ion-option value=2>every 2 days</ion-option>
-          <ion-option value=3>every 3 days</ion-option>
-          <ion-option value=7>every week</ion-option>
+          <ion-option value=0>{{'OPTION_OFF'|translate}}</ion-option>
+          <ion-option value=1>{{'OPTION_DAY1'|translate}}</ion-option>
+          <ion-option value=2>{{'OPTION_DAY2'|translate}}</ion-option>
+          <ion-option value=3>{{'OPTION_DAY3'|translate}}</ion-option>
+          <ion-option value=7>{{'OPTION_WEEK'|translate}}</ion-option>
         </ion-select>
       </ion-item>
       <hr>
-      <ion-item (click)="backup()">
+      <ion-item (click)="showConfirm('backup')">
         {{'BACKUP_DB'|translate}}
       </ion-item>
       <hr>
-      <ion-item (click)="restore()">
+      <ion-item (click)="showConfirm('restore')">
         {{'RESTORE_DB'|translate}}
       </ion-item>
       <hr>
-      <ion-item (click)="reset()">
+      <ion-item (click)="showConfirm('reset')">
         {{'DELETE_DB'|translate}}
       </ion-item>
 

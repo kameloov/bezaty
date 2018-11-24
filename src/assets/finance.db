@@ -14,9 +14,10 @@ CREATE TABLE IF NOT EXISTS `settings` (
 	`user_email`	INTEGER,
 	`notification`	INTEGER,
 	`user_name`	TEXT,
-	`curr`	INTEGER DEFAULT 0
+	`curr`	INTEGER DEFAULT 0,
+	`curr_symbol`	TEXT
 );
-INSERT INTO `settings` (balance,first_day,id,language,user_email,notification,user_name,curr) VALUES (5000.0,0,1,0,NULL,0,NULL,4);
+INSERT INTO `settings` (balance,first_day,id,language,user_email,notification,user_name,curr,curr_symbol) VALUES (5000.0,0,1,0,NULL,0,NULL,4,NULL);
 DROP TABLE IF EXISTS `monthly`;
 CREATE TABLE IF NOT EXISTS `monthly` (
 	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +42,11 @@ CREATE TABLE IF NOT EXISTS `income` (
 	`title`	TEXT,
 	`hints`	TEXT,
 	`item_date`	TEXT
+);
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE IF NOT EXISTS `history` (
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`text`	TEXT UNIQUE
 );
 DROP TABLE IF EXISTS `curr`;
 CREATE TABLE IF NOT EXISTS `curr` (

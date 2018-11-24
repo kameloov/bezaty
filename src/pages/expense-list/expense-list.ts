@@ -27,6 +27,10 @@ export class ExpenseListPage {
   public loading: boolean;
   public is_expense: boolean;
   public title: string;
+  day : string = 'day';
+  week : string = "week";
+  month : string = "month";
+  of:string = 'of';
 
   constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
     public modalCtrl: ModalController, public navParams: NavParams, public translate : TranslateService) {
@@ -35,14 +39,15 @@ export class ExpenseListPage {
     this.translate.get(this.is_expense?'EXPENSE':'INCOME').subscribe(tra=>{
         this.title = tra;
     })
+    this.getTranslation();
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
         this.getSettings();
-        if (!this.loaded) {
+        /* if (!this.loaded) {
           this.loadData(this.section);
           this.loaded = true;
-        }
+        } */
       }
     })
   }
@@ -58,6 +63,15 @@ export class ExpenseListPage {
     return total;
   }
 
+
+   getTranslation(){
+     this.translate.get(['DAY','WEEK','MONTH','OF']).subscribe(data=>{
+       this.day = data.DAY;
+       this.week = data.WEEK;
+       this.month = data.MONTH;
+       this.of = data.OF;
+     })
+   }
   public getColor(percent: number) {
     let s = new Stats();
     s.setTotal(100);
@@ -70,18 +84,7 @@ export class ExpenseListPage {
     let days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
     return days;
   }
-  /*
-    loadExpenses(fromDate : string , toDate : string ) {
-      this.dbProvider.getExpenses(fromDate, toDate).then(data => {
-        this.currentItems = data;
-        console.log(JSON.stringify(data));
-      });
-    }
-  
-    addExpense() {
-      this.navCtrl.push('AddExpensePage',{is_expense:1});
-    }
-    */
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad ExpenseListPage');
   }
@@ -100,13 +103,15 @@ export class ExpenseListPage {
     let v = title.split('-');
     let result = "";
     if (this.section == 'day')
-      result = 'Day ' + v[2] + ' of ' + v[1] + '-' + v[0];
+      result = this.day+' ' + v[2] + ' '+this.of+' ' + v[1] + '-' + v[0];
     if (this.section == 'week')
-      result = 'Week ' + v[1] + ' of ' + v[0];
+      result = this.week+' ' + v[1] + ' '+this.of+' ' + v[0];
     if (this.section == 'month')
-      result = 'Month ' + v[1] + ' of ' + v[0];
+      result = this.month+' ' + v[1] + '  '+this.of+' ' + v[0];
     return result;
   }
+
+
   getSettings() {
     if (this.dbReady) {
       this.dbProvider.getSettings().then(data => {

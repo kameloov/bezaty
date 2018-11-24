@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
 import { ContentPage } from './content';
 import {CommonModule} from '@angular/common';
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { HttpClient } from '@angular/common/http';
+import { createTranslateLoader } from '../../app/app.module';
 @NgModule({
   declarations: [
     ContentPage,
@@ -20,7 +22,13 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
       animationDuration: 300,
     }),
     IonicPageModule.forChild(ContentPage),
-    TranslateModule.forChild(),
+    TranslateModule.forChild( {loader: {
+      provide: TranslateLoader,
+      useFactory: (createTranslateLoader),
+      deps: [HttpClient]
+    }
+
+}),
     CommonModule
   ],
   exports: [

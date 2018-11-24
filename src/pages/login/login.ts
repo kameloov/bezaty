@@ -17,17 +17,19 @@ export class LoginPage {
   // If you're using the username field with or without email, make
   // sure to add it to the type
   public account: Account;
-  public loading : boolean ; 
+  public loading: boolean;
   // Our translated text strings
   private loginErrorString: string;
+  private restore_title: string;
 
-  constructor(public navCtrl: NavController,public api : Api,public menu : MenuController,
-    public user: User,public alertCtrl : AlertController,
-    public toastCtrl: ToastController,public dbProvider : DatabaseProvider,
+  constructor(public navCtrl: NavController, public api: Api, public menu: MenuController,
+    public user: User, public alertCtrl: AlertController,
+    public toastCtrl: ToastController, public dbProvider: DatabaseProvider,
     public translateService: TranslateService) {
     this.account = new Account();
-    this.translateService.get('LOGIN_ERROR').subscribe((value) => {
-      this.loginErrorString = value;
+    this.translateService.get(['LOGIN_ERROR', 'RESTORE_TITLE']).subscribe((value) => {
+      this.loginErrorString = value.LOGIN_ERROR;
+      this.restore_title = value.REsTORE_TITLE;
     })
   }
 
@@ -36,72 +38,84 @@ export class LoginPage {
     this.loading = true;
     this.user.login(this.account).subscribe((resp) => {
       console.log(JSON.stringify(resp))
-      if (resp['success'] == 1){
-        if(resp['data'][0]['data_file'])
-          this.showRestore();
-          else
-        this.navCtrl.setRoot(MainPage);
+      if (resp['success'] == 1) {
+        if (resp['data'][0]['data_file'])
+          this.showRestore(resp['data'][0]['backup_date']);
+        else
+          this.navCtrl.setRoot(MainPage);
       } else
         this.showMessage(this.loginErrorString);
-        this.loading = false;
+      this.loading = false;
     }, (err) => {
       this.showMessage(this.loginErrorString);
       this.loading = false;
     });
   }
-  showRestore(){
-    let alert = this.alertCtrl.create({
-      title: 'Restore ?',
-      message: 'Theres is a backup verion of a previous data do you want to restore it now ?',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel',
-          handler: () => {
-            this.navCtrl.push(MainPage);
+  showRestore(date: string) {
+    this.translateService.get(['RESTORE_MESSAGE', 'RESTORE_TITLE', 'YES_BTN', 'NO_BTN'], { value: date }).subscribe(tra => {
+      let alert = this.alertCtrl.create({
+        title: tra.RESTORE_TITLE,
+        message: tra.RESTORE_MESSAGE,
+        buttons: [
+          {
+            text: tra.NO_BTN,
+            role: 'cancel',
+            handler: () => {
+              this.navCtrl.setRoot(MainPage);
+            }
+          },
+          {
+            text: tra.YES_BTN,
+            handler: () => {
+              this.restore();
+            }
           }
-        },
-        {
-          text: 'Yes',
-          handler: () => {
-            this.restore();
-          }
-        }
-      ]
-    });
-    alert.present();
+        ]
+      });
+      alert.present();
+    })
   }
+
   showMessage(msg: string) {
     let toast = this.toastCtrl.create({
       message: msg,
-      duration: 3000,
+      duration: 2000,
       position: 'top'
     });
     toast.present();
   }
 
-  public restore(){
+  showTranslatedMessage(key :string){
+    this.translateService.get(key).subscribe(data=>{
+      this.showMessage(data);
+    })
+  }
+
+  public restore() {
     this.loading = true;
-    console.log('data/'+this.account.email);
-   this.api.get('data/'+this.account.email).subscribe(data=>{
-     if (data){
-       console.log(JSON.stringify(data));
-       this.dbProvider.importDataBase(data).then(data=>{
-         this.showMessage('restore completed successfully');
-         this.loading = false;
-         this.navCtrl.push(MainPage);
-       },err=>{
-         console.log('err',JSON.stringify(err));
-        this.showMessage('restore data  error');
-        this.loading = false;
-        this.navCtrl.push(MainPage);
-       })
-     }
-    
-   },err=>{
-    this.showMessage('restore network  error');
-    this.loading = false;
-   })
+    console.log('data/' + this.account.email);
+    this.api.get('data/' + this.account.email).subscribe(data => {
+      if (data) {
+        console.log(JSON.stringify(data));
+        this.dbProvider.importDataBase(data).then(data => {
+          this.translateService.get('RESTORE_SUCCESS').subscribe(data => {
+            this.showMessage(data);
+            this.loading = false;
+            this.navCtrl.setRoot(MainPage);
+          })
+
+        }, err => {
+          console.log('err', JSON.stringify(err));
+          this.showTranslatedMessage('RESTORE_ERROR');
+          this.loading = false;
+          this.navCtrl.push(MainPage);
+        })
+      }
+
+    }, err => {
+      this.showTranslatedMessage('RESTORE_ERROR');
+      this.loading = false;
+    })
   }
   ionViewDidEnter() {
     // the root left menu should be disabled on the tutorial page
@@ -114,14 +128,14 @@ export class LoginPage {
   }
   resetPassword() {
     if (!this.account.email) {
-      this.showMessage('Please enter your email address');
+      this.showTranslatedMessage('EMAIL_EMPTY');
     } else {
 
       this.user.sendResetCode(this.account.email).subscribe((res) => {
-        this.showMessage(!res['code'] ? 'Rest code has been ent to your email' : 'Error reset code was not sent ');
+        this.showTranslatedMessage(!res['code'] ? 'CODE_SENT' : 'CODE_NOT_SENT');
       },
         (err => {
-          this.showMessage('Error reset code was not sent ');
+          this.showTranslatedMessage('CODE_NOT_SENT');
         }));
     }
   }

@@ -3,6 +3,6 @@ export class Expense {
     category_id : number;
     title : String;
     hints : String; 
-    item_date : String ; 
+    item_date : string ; 
     value : number;
 }
