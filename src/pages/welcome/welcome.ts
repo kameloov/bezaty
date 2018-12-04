@@ -16,7 +16,7 @@ import { AppSettings } from '../../models/AppSettings';
   templateUrl: 'welcome.html'
 })
 export class WelcomePage {
-
+  
   appSettings : AppSettings;
   showButtons : boolean = false;
 

@@ -130,7 +130,7 @@ export class LoginPage {
     if (!this.account.email) {
       this.showTranslatedMessage('EMAIL_EMPTY');
     } else {
-
+      this.navCtrl.push('ResetPasswordPage',{code :1550});
       this.user.sendResetCode(this.account.email).subscribe((res) => {
         this.showTranslatedMessage(!res['code'] ? 'CODE_SENT' : 'CODE_NOT_SENT');
       },

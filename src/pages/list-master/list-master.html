@@ -25,12 +25,9 @@
     <ion-grid *ngIf="currentItems && currentItems.length>0 && !this.shownBefore" padding class="swipe-bg" text-center>
       <ion-row>
         <ion-col col-12>
-            <img src="assets/img/first.png"  [ngClass]="{'slide':settings.language==0,'slide-right':settings.language==1}" />
+            <img src="assets/img/finger.png" width="40px" height="40px" [ngClass]="{'slide':settings.language==0,'slide-right':settings.language==1}" />
             {{'TUTORIAL_SLIDE2_TITLE'|translate}}
         </ion-col>
-       <!--  <ion-col col-2>
-          <button ion-button outline small>ok</button>
-        </ion-col> -->
       </ion-row>
         
     </ion-grid>

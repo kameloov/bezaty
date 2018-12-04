@@ -6,6 +6,8 @@ import { MainPage } from '../';
 import { Account } from '../../models/Account';
 import { TutorialPage } from '../tutorial/tutorial';
 import { DatabaseProvider } from '../../providers/database/database';
+import { AppSettings } from '../../models/AppSettings';
+import { Subscriber, Subscription } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -13,22 +15,25 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'signup.html'
 })
 export class SignupPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
   account: Account;
   public confirm : string;
   public loading  : boolean ;
-  // Our translated text strings
+  public settings : AppSettings;
   private signupErrorString: string;
   private register_uccess:string;
   private password_mismatch : string;
   private already_registered;
+  private state : Subscription;
+
 
   constructor(public navCtrl: NavController,public menu :MenuController,
     public user: User, public dbProvider : DatabaseProvider,
     public toastCtrl: ToastController,
     public translateService: TranslateService) {
+       this.state = dbProvider.getDatabaseState().subscribe(ready=>{
+        if (ready)
+        this.getSettings();
+      })
       this.account = new Account();
       let keys =['SIGNUP_ERROR','REGISTER_SUCCESS',
       'PASSWORD_MISMATCH','ALREADY_REGISTERED'];
@@ -41,18 +46,22 @@ export class SignupPage {
     })
   }
 
+  getSettings(){
+    this.dbProvider.getSettings().then(data=>{
+      this.settings = data;
+    })
+  }
+
   doSignup() {
     // Attempt to login in through our User service
     if (this.confirm!=this.account.password){
       this.showMEssage(this.password_mismatch);
       return;
     }
-
-    
     this.loading = true;
-    this.user.signup(this.account).subscribe((resp) => {
+    this.user.signup(this.account,this.settings.language).subscribe((resp) => {
       if (resp['data']){
-      this.navCtrl.setRoot('TutorialPage');
+      this.navCtrl.setRoot('TutorialPage',{dir :this.settings.language==1?"rtl":"ltr"});
       this.showMEssage(this.register_uccess);
       }
       else {
@@ -60,10 +69,6 @@ export class SignupPage {
       }
       this.loading = false;
     }, (err) => {
-
-      //this.navCtrl.push(MainPage);
-
-      // Unable to sign up
       this.showMEssage(this.signupErrorString);
       this.loading = false;
     });
@@ -78,6 +83,7 @@ export class SignupPage {
   ionViewWillLeave() {
     // enable the root left menu when leaving the tutorial page
     this.menu.enable(true);
+    //this.state.unsubscribe();
   }
   showMEssage(msg : string){
     let toast = this.toastCtrl.create({

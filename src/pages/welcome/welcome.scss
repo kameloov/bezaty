@@ -1,6 +1,6 @@
 page-welcome {
   .bg{
-    background: url('../assets/img/splashbg.jpeg')
+    background: url('../assets/img/bg.png')
   }
   .splash-bg {
     position: relative;
@@ -12,8 +12,7 @@ page-welcome {
     animation: animatedBackground 80s linear infinite;
   }
  
-
-  @keyframes animatedBackground {
+    @keyframes animatedBackground {
     from { background-position: 0 0; }
     to { background-position: 100% 0; }
   }
@@ -61,4 +60,21 @@ page-welcome {
   ion-fab button ion-icon{
     visibility: hidden;
   }
+
+  .coin {
+    position: absolute;
+    left: 25%;
+    top:-10%;
+    font-size: 150%;
+   /*  -webkit-animation: slide 2s forwards;
+    -webkit-animation-delay: 1s; */
+    animation: slide 3s forwards infinite;
+    animation-delay: 0.5s;
+}
+
+
+@keyframes slide {
+    100% { top: 115%; }
+}
+
 }

@@ -18,6 +18,13 @@
   color: color($colors,'danger');
 }
 
+.ion-spinner {
+  height: 22px;
+  width:22px;
+  stroke: rgb(178, 209, 2);
+  fill: rgb(218, 201, 50);
+}
+
 .btn-gold {
     background: url('../assets/img/btnGold.png') transparent;
     background-size: 100%;

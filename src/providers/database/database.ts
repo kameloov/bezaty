@@ -20,7 +20,6 @@ import { Income } from '../../models/Income';
 @Injectable()
 export class DatabaseProvider {
 
-
   private database: SQLiteObject;
   private databaseReady: BehaviorSubject<Boolean>;
 
@@ -54,6 +53,22 @@ export class DatabaseProvider {
     return this.databaseReady.asObservable();
 
   }
+
+
+  setLang(lang: number): any {
+    
+    return this.database.executeSql("UPDATE `settings`  Set language= ?;", [lang])
+      .then(data => {
+        if (data)
+        console.log('change language '+lang);
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
   fillDB() {
     this.http.get('assets/finance.db')
       .map(res => res.text())
@@ -101,6 +116,19 @@ export class DatabaseProvider {
       return data;
     })
   }
+
+  ExpensehintShown(){
+    return this.storage.get('expense_hint_shown').then(data=>{
+     return data;
+   })
+ }
+
+
+
+ setExpenseHintShown(){
+  this.storage.set('expense_hint_shown',true);
+}
+
 
   setHintShown(){
     this.storage.set('hint_shown',true);
@@ -300,12 +328,24 @@ export class DatabaseProvider {
         })
   }
 
+  updateEmailLang(email: string,name : string, lang : number) {
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?, language=?;", [email,name,lang])
+      .then(data => {
+        return data;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return err;
+        })
+  }
+
   updateSettings(settings: AppSettings) {
     let data = [settings.balance, settings.first_day, settings.language,
        settings.user_email,settings.notification,settings.user_name,settings.curr,settings.curr_symbol];
     return this.database.executeSql("UPDATE `settings` "+
     " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?, curr_symbol=? ;", data)
       .then(data => {
+        console.log("new settings  : "+ JSON.stringify(settings));
         return data;
       },
         err => {

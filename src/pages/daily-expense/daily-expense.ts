@@ -25,6 +25,8 @@ export class DailyExpensePage {
   public is_expense : boolean ; 
   public type : string;
   public settings : AppSettings;
+  public shownBefore: boolean;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
      public dbProvider : DatabaseProvider) {
     this.is_expense = navParams.get('is_expense');
@@ -35,6 +37,7 @@ export class DailyExpensePage {
       this.dbReady = true; 
       this.loadData();
       this.getSettings();
+      this.getHintShown();
       }
 
     })
@@ -44,6 +47,13 @@ export class DailyExpensePage {
     this.dbProvider.getPeriodValues(this.is_expense,this.type,this.period).then(data => {
       this.currentItems = data;
     });
+  }
+
+
+  getHintShown() {
+    this.dbProvider.ExpensehintShown().then(shown => {
+      this.shownBefore = shown;
+    })
   }
 
 
@@ -74,7 +84,19 @@ export class DailyExpensePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad DailyExpensePage');
   }
+
+  shouldShowHint(){
+    return (this.settings && this.currentItems && this.currentItems.length>0 && !this.shownBefore)
+  }
+
+
   ionViewDidEnter() {
+    setTimeout(() => {
+      if (this.shouldShowHint()) {
+        this.shownBefore = true;
+        this.dbProvider.setExpenseHintShown();
+      }
+    }, 2500);
     if (this.dbReady){
       this.loadData();
       this.getSettings();

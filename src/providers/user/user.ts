@@ -72,7 +72,7 @@ export class User {
    * Send a POST request to our signup endpoint with the data
    * the user entered on the form.
    */
-  signup(accountInfo: Account) {
+  signup(accountInfo: Account, lang : number) {
     let seq = this.api.post('users/register', accountInfo).share();
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
@@ -81,8 +81,9 @@ export class User {
         accountInfo.id = res.data;
         this._user = accountInfo;
         this.db.getDatabaseState().subscribe(ready=>{
-          if (ready)
-          this.db.updateEmail(accountInfo.email,accountInfo.name);
+          if (ready){
+          this.db.updateEmailLang(accountInfo.email,accountInfo.name,lang);
+          }
         })
 
       }

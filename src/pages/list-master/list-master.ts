@@ -25,7 +25,7 @@ export class ListMasterPage {
         this.dbReady = true;
         this.dbProvider.getSettings().then(data=>{
           this.settings = data;
-        })
+        });
         if (!this.loaded) {
           this.loadCategories();
           this.getHintShown();
@@ -35,6 +35,7 @@ export class ListMasterPage {
       }
     })
   }
+
   loadCategories() {
     this.dbProvider.getCategories(this.type).then(data => {
       this.currentItems = data;
@@ -62,6 +63,8 @@ export class ListMasterPage {
       this.shownBefore = shown;
     })
   }
+
+
   ionViewDidEnter() {
     setTimeout(()=>{
       if (this.shouldShowHint()){
@@ -69,6 +72,7 @@ export class ListMasterPage {
         this.dbProvider.setHintShown();
       }
     },2500);
+    
     if (this.dbReady) {
       this.loaded = true;
         this.loadCategories();

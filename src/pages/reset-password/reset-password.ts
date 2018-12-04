@@ -22,7 +22,9 @@ export class ResetPasswordPage {
   public confirmPassword: string;
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public user: User, public settings: Settings, public toastCtrl: ToastController) {
+      this.correct = navParams.get('code');
   }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ResetPasswordPage');
@@ -48,6 +50,7 @@ export class ResetPasswordPage {
     } else
       this.showMessage('Wrong code , please try again');
   }
+
 
   showMessage(msg: string) {
     let toast = this.toastCtrl.create({

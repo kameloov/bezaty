@@ -17,7 +17,6 @@ export class Settings {
         this.loadSettings();
       }
     })
-
   }
 
   private loadSettings() :any {

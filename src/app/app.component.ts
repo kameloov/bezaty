@@ -86,17 +86,10 @@ export class MyApp {
       //notification.cancelAll();
       this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#3a8dc2')
-      this.dbProvider.getDatabaseState().subscribe((ready) => {
+      let state = this.dbProvider.getDatabaseState().subscribe((ready) => {
         if (ready) {
           this.dbProvider.getSettings().then(data => {
             if (data.user_email) {
-             /*  storage.get('first_run').then(data => {
-                if (!data) {
-                  this.rootPage = 'TutorialPage';
-                  storage.setItem('first_run', 'no');
-                } else
-                  this.rootPage = 'ContentPage'
-              }); */
               this.rootPage = 'ContentPage'
             }
             else
@@ -107,6 +100,8 @@ export class MyApp {
           });
           this.initTranslate();
         }
+        if (state)
+        state.unsubscribe();
       })
 
     });
@@ -120,7 +115,6 @@ export class MyApp {
       this.translate.setDefaultLang(data.language == 0 ? "en" : "ar");
       this.translate.use(data.language == 0 ? "en" : "ar");
       this.side = data.language == 1 ? 'right' : 'left';
-      console.log("language ", data.language);
     })
     /*     if (browserLang) {
           this.settings.

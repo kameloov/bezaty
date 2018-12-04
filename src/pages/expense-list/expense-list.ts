@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 @IonicPage()
 @Component({
   selector: 'page-expense-list',
@@ -23,31 +22,28 @@ export class ExpenseListPage {
   public loaded: boolean;
   public empty: boolean;
   public currentItems: any[];
-  appSettings: AppSettings;
   public loading: boolean;
   public is_expense: boolean;
   public title: string;
-  day : string = 'day';
-  week : string = "week";
-  month : string = "month";
-  of:string = 'of';
+  day: string = 'day';
+  week: string = "week";
+  month: string = "month";
+  of: string = 'of';
+  public shownBefore: boolean;
+  public settings : AppSettings;
 
   constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
-    public modalCtrl: ModalController, public navParams: NavParams, public translate : TranslateService) {
+    public modalCtrl: ModalController, public navParams: NavParams, public translate: TranslateService) {
     this.section = 'day';
     this.is_expense = navParams.get('is_expense');
-    this.translate.get(this.is_expense?'EXPENSE':'INCOME').subscribe(tra=>{
-        this.title = tra;
+    this.translate.get(this.is_expense ? 'EXPENSE' : 'INCOME').subscribe(tra => {
+      this.title = tra;
     })
     this.getTranslation();
     this.dbProvider.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.dbReady = true;
         this.getSettings();
-        /* if (!this.loaded) {
-          this.loadData(this.section);
-          this.loaded = true;
-        } */
       }
     })
   }
@@ -55,23 +51,30 @@ export class ExpenseListPage {
   public getTotal() {
     let total = 0;
     if (this.section == 'day')
-      total = this.appSettings.balance / this.getDaysCount();
+      total = this.settings.balance / this.getDaysCount();
     if (this.section == 'week')
-      total = 7 * (this.appSettings.balance / this.getDaysCount());
+      total = 7 * (this.settings.balance / this.getDaysCount());
     if (this.section == 'month')
-      total = this.appSettings.balance;
+      total = this.settings.balance;
     return total;
   }
 
 
-   getTranslation(){
-     this.translate.get(['DAY','WEEK','MONTH','OF']).subscribe(data=>{
-       this.day = data.DAY;
-       this.week = data.WEEK;
-       this.month = data.MONTH;
-       this.of = data.OF;
-     })
-   }
+  getHintShown() {
+    this.dbProvider.hintShown().then(shown => {
+      this.shownBefore = shown;
+    })
+  }
+
+
+  getTranslation() {
+    this.translate.get(['DAY', 'WEEK', 'MONTH', 'OF']).subscribe(data => {
+      this.day = data.DAY;
+      this.week = data.WEEK;
+      this.month = data.MONTH;
+      this.of = data.OF;
+    })
+  }
   public getColor(percent: number) {
     let s = new Stats();
     s.setTotal(100);
@@ -88,26 +91,37 @@ export class ExpenseListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ExpenseListPage');
   }
+  shouldShowHint(){
+    return ( this.currentItems && this.currentItems.length>0 && !this.shownBefore)
+  }
 
   ionViewDidEnter() {
+    setTimeout(() => {
+      if (this.shouldShowHint()) {
+        this.shownBefore = true;
+        this.dbProvider.setHintShown();
+      }
+    }, 2500);
     if (this.dbReady) {
       this.loadData(this.section);
       this.loaded = true;
+      //this.getSettings();
     }
-    this.getSettings();
+    
   }
+  
 
   public getTitle(title: string) {
     if (!title)
-    return title;
+      return title;
     let v = title.split('-');
     let result = "";
     if (this.section == 'day')
-      result = this.day+' ' + v[2] + ' '+this.of+' ' + v[1] + '-' + v[0];
+      result = this.day + ' ' + v[2] + ' ' + this.of + ' ' + v[1] + '-' + v[0];
     if (this.section == 'week')
-      result = this.week+' ' + v[1] + ' '+this.of+' ' + v[0];
+      result = this.week + ' ' + v[1] + ' ' + this.of + ' ' + v[0];
     if (this.section == 'month')
-      result = this.month+' ' + v[1] + '  '+this.of+' ' + v[0];
+      result = this.month + ' ' + v[1] + '  ' + this.of + ' ' + v[0];
     return result;
   }
 
@@ -115,29 +129,11 @@ export class ExpenseListPage {
   getSettings() {
     if (this.dbReady) {
       this.dbProvider.getSettings().then(data => {
-        this.appSettings = data;
+        this.settings = data;
       });
     }
   }
-  /*
-    deleteItem(expense: Expense) {
-      this.dbProvider.deleteExpense(expense).then(data => {
-        this.currentItems.splice(this.currentItems.indexOf(expense), 1);
-      });
-    }
-  
-    editItem(expense: Expense) {
-      this.navCtrl.push('AddExpensePage', { 'exp': expense, 'edit': true });
-    }
-  
-    dateTotr(date : Date){
-      let result : string;
-      result = date.getFullYear() + '-' + this.pareseNumber(date.getMonth() + 1) + '-' + this.pareseNumber(date.getDate());
-      return result;
-    }
-  */
-
-
+ 
   public loadData(section: string) {
     this.loading = true;
     if (this.dbReady) {

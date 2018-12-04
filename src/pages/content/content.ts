@@ -5,6 +5,7 @@ import { DatabaseProvider } from '../../providers/database/database';
 import { Settings } from '../../providers';
 import { TranslateService } from '@ngx-translate/core';
 import { AppSettings } from '../../models/AppSettings';
+import { Subscription } from 'rxjs';
 @IonicPage()
 @Component({
   selector: 'page-content',
@@ -29,6 +30,7 @@ export class ContentPage {
   alerted: boolean;
   public alert: Alert;
   unregister: Function;
+  public state : Subscription;
 
   constructor(public navCtrl: NavController, private dbProvider: DatabaseProvider,
     public alertCtrl: AlertController, public menuCtrl: MenuController,
@@ -41,20 +43,20 @@ export class ContentPage {
     platform.ready().then(res => {
       this.width = platform.width();
     });
+    this.loading = true;
+    this.state=this.dbProvider.getDatabaseState().subscribe((ready) => {
+      if (ready) {
+        this.dbReady = true;
+      } else 
+      this.loading =false;
+    });
   }
 
   private refreshValues() {
     this.loading = true;
-    this.dbProvider.getDatabaseState().subscribe((ready) => {
-      if (ready) {
-        this.dbReady = true;
-        this.loadStatistics();
-      } else
-        this.loading = false;
-
-    })
+    this.loadStatistics();
+  
   }
-
 
   showConfirm() {
     this.translate.get(['EXIT_TITLE', 'EXIT_MSG', 'YES_BTN', 'NO_BTN']).subscribe(data => {
@@ -87,8 +89,15 @@ export class ContentPage {
     return days;
   }
 
-  loadStatistics(): any {
 
+  
+  public updateUi() {
+    this.platform.setDir(this.appSettings.language==1?'rtl':'ltr',true);
+    this.translate.setDefaultLang(this.appSettings.language == 1 ? "ar" : "en");
+    this.translate.use(this.appSettings.language == 1 ? "ar" : "en");
+  }
+
+  loadStatistics(): any {
     if (this.dbReady) {
       this.dbProvider.getSettings().then((data) => {
         this.total = data.balance;
@@ -97,8 +106,7 @@ export class ContentPage {
         this.daily.setTotal(perDay);
         this.weekly.setTotal(perDay * 7);
         this.monthly.setTotal(this.total);
-        this.translate.use(data.language == 1 ? "ar" : "en");
-        this.translate.setDefaultLang(data.language == 1 ? "ar" : "en");
+        this.updateUi();
       })
       let d = new Date();
       this.to = this.dateTostr(d);
@@ -163,7 +171,17 @@ export class ContentPage {
     this.refreshValues();
   }
 
+ /*  ionViewWillEnter() {
+    this.state = this.dbProvider.getDatabaseState().subscribe(data=>{
+      if (data)
+      this.dbReady = true; 
+      else 
+      this.dbReady = false;
+    })
+    } */
+
   ionViewDidLeave() {
+    //this.state.unsubscribe();
     this.unregister();
   }
 
