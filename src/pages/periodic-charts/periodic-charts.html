@@ -27,14 +27,17 @@
       <ion-spinner  *ngIf="loading" ></ion-spinner>
     </ion-col>
   </ion-row>
-  <div class="row" >
-    <div class="col-md-12">
-      <div style="display: block;">
+  <ion-grid>
+  <ion-row >
+    <ion-col col-12>
+      <div style="display: block;margin: 4px auto">
         <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="lineChartOptions" [legend]="true"
-          width="width" height="400" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+         height="320" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
       </div>
-    </div>
-  </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
         <ion-row padding>
             <ion-col col-4>
               <button ion-button  block (click)="chartType ='line'">{{'LINE_BTN'|translate}}</button>

@@ -41,8 +41,9 @@ export class LoginPage {
       if (resp['success'] == 1) {
         if (resp['data'][0]['data_file'])
           this.showRestore(resp['data'][0]['backup_date']);
-        else
+        else{
           this.navCtrl.setRoot(MainPage);
+        }
       } else
         this.showMessage(this.loginErrorString);
       this.loading = false;

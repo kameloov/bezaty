@@ -19,15 +19,16 @@
       <ion-spinner></ion-spinner>
     </ion-col>
   </ion-row>
-
-  <div class="row" *ngIf="!loading &&chartData">
-    <div class="col-md-12">
-      <div style="display: block;">
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="ChartOptions" [legend]="true" width="width"
-          height="400" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+<ion-grid>
+  <ion-row *ngIf="!loading &&chartData">
+    <ion-col col-12>
+      <div style="display: block;margin: 4px auto">
+        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="ChartOptions" [legend]="true"
+         height="320" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
       </div>
-    </div>
-  </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
   <ion-row *ngIf="!loading &&chartData" padding>
     <ion-col col-4>

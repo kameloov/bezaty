@@ -124,6 +124,16 @@ export class DatabaseProvider {
  }
 
 
+ setLogged(logged : boolean){
+   this.storage.set('logged',logged);
+ }
+
+ isLogged(){
+  return this.storage.get('logged').then(data=>{
+    return data;
+  })
+ }
+
 
  setExpenseHintShown(){
   this.storage.set('expense_hint_shown',true);

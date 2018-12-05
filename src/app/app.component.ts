@@ -88,8 +88,10 @@ export class MyApp {
       this.statusBar.backgroundColorByHexString('#3a8dc2')
       let state = this.dbProvider.getDatabaseState().subscribe((ready) => {
         if (ready) {
-          this.dbProvider.getSettings().then(data => {
-            if (data.user_email) {
+          this.initTranslate();
+          this.dbProvider.isLogged().then(data => {
+            console.log('is logged',data);
+            if (data) {
               this.rootPage = 'ContentPage'
             }
             else
@@ -98,7 +100,7 @@ export class MyApp {
           }, err => {
             this.splashScreen.hide();
           });
-          this.initTranslate();
+         
         }
         if (state)
         state.unsubscribe();
@@ -135,6 +137,9 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
+    if (page.exit){
+      this.dbProvider.setLogged(false);
+    }
     if (page.root)
       this.nav.setRoot(page.component, page.params);
     else
