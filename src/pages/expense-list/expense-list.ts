@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { AppSettings } from '../../models/AppSettings';
 import { Stats } from '../../models/Stats';
@@ -32,7 +32,7 @@ export class ExpenseListPage {
   public shownBefore: boolean;
   public settings : AppSettings;
 
-  constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,
+  constructor(public navCtrl: NavController, public dbProvider: DatabaseProvider,public platform :Platform,
     public modalCtrl: ModalController, public navParams: NavParams, public translate: TranslateService) {
     this.section = 'day';
     this.is_expense = navParams.get('is_expense');

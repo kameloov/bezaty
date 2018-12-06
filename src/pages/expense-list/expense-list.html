@@ -1,12 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{title}}</ion-title>
-  
-    <!--  <ion-buttons end>
-      <button ion-button icon-only (click)="addExpense()">
-          <ion-icon name="stats"></ion-icon>
-      </button>
-    </ion-buttons> -->
+    <ion-title *ngIf="platform.is('adnroid')">{{title}}</ion-title>
     <ion-segment [(ngModel)]="section" color="light">
       <ion-segment-button value="day" (click)="loadData('day')">
         {{'DAILY'|translate}}

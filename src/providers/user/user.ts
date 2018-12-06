@@ -37,7 +37,6 @@ export class User {
    */
   login(accountInfo: Account) {
     let seq = this.api.post('users/login', accountInfo).share();
-
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {

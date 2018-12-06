@@ -8,7 +8,7 @@ import { DatabaseProvider } from '../providers/database/database';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications';
 
 @Component({
-  template: ` <ion-menu [content]="content" [attr.side]="this.platform.dir()=='ltr'?'left':'right' " persistent="true">
+  template: ` <ion-menu [content]="content" [attr.side]="this.platform.is('android') && this.platform.dir()=='rtl'?'right':'left' " persistent="true">
     <ion-header>
       <ion-toolbar>
         <ion-title></ion-title>
@@ -17,7 +17,7 @@ import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native
 
     <ion-content>
       <ion-list>
-        <button menuClose [ngClass]="{'exit-btn':p.exit==true}" ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        <button menuClose [ngClass]="{'exit-btn':p.exit==true}" ion-item *ngFor="let p of pages" text-center (click)="openPage(p)">
           {{p.title|translate}}
         </button>
       </ion-list>
@@ -117,6 +117,7 @@ export class MyApp {
       this.translate.setDefaultLang(data.language == 0 ? "en" : "ar");
       this.translate.use(data.language == 0 ? "en" : "ar");
       this.side = data.language == 1 ? 'right' : 'left';
+    
     })
     /*     if (browserLang) {
           this.settings.
@@ -126,12 +127,13 @@ export class MyApp {
           this.translate.use('en'); // Set your language here
         }
      */
-    let keys = ['BACK_BUTTON_TEXT'];
+    this.config.set('ios', 'backButtonText', " ");
+ /*    let keys = ['BACK_BUTTON_TEXT'];
     this.translate.get(keys).subscribe(values => {
       console.log(JSON.stringify(values));
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
 
-    });
+    }); */
   }
 
   openPage(page) {

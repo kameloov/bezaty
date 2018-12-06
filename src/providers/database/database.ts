@@ -438,7 +438,7 @@ export class DatabaseProvider {
       });
   }
   getTotalExpense(from: string, to: string) {
-    return this.database.executeSql("select sum(value) as total from item where item_date between ? and ?", [from, to])
+    return this.database.executeSql("select sum(value) as total from item where item_date >= ? and item_date <= ?", [from, to])
       .then(data => {
         let total = -1;
         if (data.rows.length > 0) {
