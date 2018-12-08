@@ -78,6 +78,7 @@ export class DatabaseProvider {
           .then(data => {
             console.log("database is ready ");
             this.databaseReady.next(true);
+            this.setUnsaved(false);
             this.storage.set('database_filled', true);
             return data;
           })
@@ -91,6 +92,7 @@ export class DatabaseProvider {
     let data = [null, category.name, category.details, category.icon, category.balance, category.is_expense];
     return this.database.executeSql("INSERT INTO `category` (id,name,details,icon,balance,is_expense) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -103,6 +105,7 @@ export class DatabaseProvider {
     let data = [category.name, category.details, category.icon, category.balance, category.id];
     return this.database.executeSql("UPDaTE `category`  Set name=?,details=?,icon=?,balance=? WHERE id = ?;", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -134,6 +137,11 @@ export class DatabaseProvider {
   })
  }
 
+ getUnsaved(){
+  return  this.storage.get('unsaved').then(data=>{
+    return data;
+  })
+ }
 
  setExpenseHintShown(){
   this.storage.set('expense_hint_shown',true);
@@ -144,7 +152,9 @@ export class DatabaseProvider {
     this.storage.set('hint_shown',true);
   }
 
-  setF
+  setUnsaved(unsaved : boolean){
+    this.storage.set('unsaved',unsaved);
+  }
 
   getCategories(isExpense: number) {
     return this.database.executeSql("select * from category  where is_expense =? order by id desc", [isExpense])
@@ -169,6 +179,7 @@ export class DatabaseProvider {
   deleteCategory(category: Category) {
     return this.database.executeSql("DELETE FROM `category` where id = ?", [category.id])
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -183,6 +194,7 @@ export class DatabaseProvider {
     let data = [null, item.category_id, item.title, item.hints, item.item_date, item.value];
     return this.database.executeSql("INSERT INTO `item` (id,category_id,title,hints,item_date,value) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -195,6 +207,7 @@ export class DatabaseProvider {
     let data = [item.category_id, item.title, item.hints, item.item_date, item.value, item.id];
     return this.database.executeSql("Update `item` set category_id =?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -208,6 +221,7 @@ export class DatabaseProvider {
   deleteExpense(expense: Expense) {
     return this.database.executeSql("DELETE FROM `item` where id = ?", [expense.id])
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -271,6 +285,7 @@ export class DatabaseProvider {
     let data = [null, item.category_id, item.title, item.hints, item.item_date, item.value];
     return this.database.executeSql("INSERT INTO `income` (id,category_id,title,hints,item_date,value) VALUES (?,?,?,?,?,?);", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -283,6 +298,7 @@ export class DatabaseProvider {
     let data = [item.category_id, item.title, item.hints, item.item_date, item.value, item.id];
     return this.database.executeSql("Update `income` set category_id =?,title=?,hints=?,item_date=?,value=? WHERE id = ?", data)
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -296,6 +312,7 @@ export class DatabaseProvider {
   deleteIncome(expense: Income) {
     return this.database.executeSql("DELETE FROM `income` where id = ?", [expense.id])
       .then(data => {
+        this.setUnsaved(true);
         return data;
       },
         err => {
@@ -330,6 +347,7 @@ export class DatabaseProvider {
 
     return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?;", [email,name])
       .then(data => {
+        this.setUnsaved(false);
         return data;
       },
         err => {
@@ -341,6 +359,7 @@ export class DatabaseProvider {
   updateEmailLang(email: string,name : string, lang : number) {
     return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?, language=?;", [email,name,lang])
       .then(data => {
+        this.setUnsaved(false);
         return data;
       },
         err => {
@@ -585,6 +604,7 @@ export class DatabaseProvider {
 
   importDataBase( data ){
     return this.sqlitePorter.importSqlToDb(this.database,data).then(data=>{
+      this.setUnsaved(false);
       return data;
     },err=>{
       return err;

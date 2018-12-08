@@ -79,6 +79,7 @@ export class ListMasterPage {
       this.getHintShown();
     }
   }
+  
 
   shouldShowHint(){
     return ( this.currentItems && this.currentItems.length>0 && !this.shownBefore)

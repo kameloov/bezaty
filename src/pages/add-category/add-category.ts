@@ -80,7 +80,7 @@ export class AddCategoryPage {
     this.translate.get(this.edit ? 'EDIT' : 'ADD').subscribe(data => {
       this.title = data;
     })
-    this.translate.get('NO_CATEGORIES').subscribe(data => {
+    this.translate.get('ُCATEGORY_EMPTY').subscribe(data => {
       this.empty = data;
     })
   }

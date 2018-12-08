@@ -108,6 +108,7 @@ export class SettingsPage {
       this.api.post('data/backup', { email: this.appSettings.user_email, data: JSON.stringify(data) }).subscribe(data => {
         console.log(JSON.stringify(data));
         this.showMessage(this.success_message);
+        this.dbProvider.setUnsaved(false);
         this.loading = false;
       },
         err => {
