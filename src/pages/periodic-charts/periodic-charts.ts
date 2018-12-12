@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
+import { BaseChartDirective } from 'ng2-charts';
 
 /**
  * Generated class for the PeriodicChartsPage page.
@@ -28,6 +29,7 @@ export class PeriodicChartsPage {
   public height: number = 0;
   public chartType: string = 'bar';
   public is_expense: boolean;
+  @ViewChild("baseChart") chart: BaseChartDirective;
 
 
   constructor(public navCtrl: NavController, public platform: Platform, public navParams: NavParams, public dbProvider: DatabaseProvider) {
@@ -58,6 +60,13 @@ export class PeriodicChartsPage {
           this.periodic = data;
           this.extractChartData();
           this.extractChartLabes();
+         if (this.chart!==undefined){
+           this.chart.chart.destroy();
+           this.chart.chart = 0;
+           this.chart.datasets = this.chartData;
+           this.chart.labels = this.chartLabels;
+           this.chart.ngOnInit();
+         }
         }
         else
           this.empty = true;

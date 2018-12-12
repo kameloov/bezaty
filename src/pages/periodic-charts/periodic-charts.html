@@ -31,7 +31,7 @@
   <ion-row >
     <ion-col col-12>
       <div style="display: block;margin: 4px auto">
-        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="lineChartOptions" [legend]="true"
+        <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="lineChartOptions" [legend]="true"
          height="320" [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
       </div>
     </ion-col>

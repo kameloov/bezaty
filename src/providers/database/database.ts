@@ -48,7 +48,7 @@ export class DatabaseProvider {
     });
   }
 
-  
+
   getDatabaseState() {
     return this.databaseReady.asObservable();
 
@@ -56,11 +56,11 @@ export class DatabaseProvider {
 
 
   setLang(lang: number): any {
-    
+
     return this.database.executeSql("UPDATE `settings`  Set language= ?;", [lang])
       .then(data => {
         if (data)
-        console.log('change language '+lang);
+          console.log('change language ' + lang);
         return data;
       },
         err => {
@@ -114,46 +114,46 @@ export class DatabaseProvider {
         })
   }
 
-  hintShown(){
-     return this.storage.get('hint_shown').then(data=>{
+  hintShown() {
+    return this.storage.get('hint_shown').then(data => {
       return data;
     })
   }
 
-  ExpensehintShown(){
-    return this.storage.get('expense_hint_shown').then(data=>{
-     return data;
-   })
- }
-
-
- setLogged(logged : boolean){
-   this.storage.set('logged',logged);
- }
-
- isLogged(){
-  return this.storage.get('logged').then(data=>{
-    return data;
-  })
- }
-
- getUnsaved(){
-  return  this.storage.get('unsaved').then(data=>{
-    return data;
-  })
- }
-
- setExpenseHintShown(){
-  this.storage.set('expense_hint_shown',true);
-}
-
-
-  setHintShown(){
-    this.storage.set('hint_shown',true);
+  ExpensehintShown() {
+    return this.storage.get('expense_hint_shown').then(data => {
+      return data;
+    })
   }
 
-  setUnsaved(unsaved : boolean){
-    this.storage.set('unsaved',unsaved);
+
+  setLogged(logged: boolean) {
+    this.storage.set('logged', logged);
+  }
+
+  isLogged() {
+    return this.storage.get('logged').then(data => {
+      return data;
+    })
+  }
+
+  getUnsaved() {
+    return this.storage.get('unsaved').then(data => {
+      return data;
+    })
+  }
+
+  setExpenseHintShown() {
+    this.storage.set('expense_hint_shown', true);
+  }
+
+
+  setHintShown() {
+    this.storage.set('hint_shown', true);
+  }
+
+  setUnsaved(unsaved: boolean) {
+    this.storage.set('unsaved', unsaved);
   }
 
   getCategories(isExpense: number) {
@@ -251,18 +251,18 @@ export class DatabaseProvider {
   }
 
 
-  getPeriodValues(expense : boolean, type :string, value : string ) {
+  getPeriodValues(expense: boolean, type: string, value: string) {
     let s = "";
     let table = 'income';
-    if(expense)
-    table = 'item';
-    if(type=="week")
-    s = " strftime('%Y-%W', item_date)";
-    if(type=="month")
-    s= "strftime('%Y-%m', item_date)";
-    if(type=="day")
-    s = "strftime('%Y-%m-%d', item_date)"
-    return this.database.executeSql("select * from "+table+" where "+s+"=?", [value])
+    if (expense)
+      table = 'item';
+    if (type == "week")
+      s = " strftime('%Y-%W', item_date)";
+    if (type == "month")
+      s = "strftime('%Y-%m', item_date)";
+    if (type == "day")
+      s = "strftime('%Y-%m-%d', item_date)"
+    return this.database.executeSql("select * from " + table + " where " + s + "=?", [value])
       .then(data => {
         //console.log(data);
         let expenses = [];
@@ -343,9 +343,9 @@ export class DatabaseProvider {
 
   ////////////////////////////// Settings ////////////////////////////////
 
-  updateEmail(email: string,name : string) {
+  updateEmail(email: string, name: string) {
 
-    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?;", [email,name])
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?;", [email, name])
       .then(data => {
         this.setUnsaved(false);
         return data;
@@ -356,8 +356,8 @@ export class DatabaseProvider {
         })
   }
 
-  updateEmailLang(email: string,name : string, lang : number) {
-    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?, language=?;", [email,name,lang])
+  updateEmailLang(email: string, name: string, lang: number) {
+    return this.database.executeSql("UPDATE `settings`  Set user_email= ?,user_name=?, language=?;", [email, name, lang])
       .then(data => {
         this.setUnsaved(false);
         return data;
@@ -370,11 +370,11 @@ export class DatabaseProvider {
 
   updateSettings(settings: AppSettings) {
     let data = [settings.balance, settings.first_day, settings.language,
-       settings.user_email,settings.notification,settings.user_name,settings.curr,settings.curr_symbol];
-    return this.database.executeSql("UPDATE `settings` "+
-    " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?, curr_symbol=? ;", data)
+    settings.user_email, settings.notification, settings.user_name, settings.curr, settings.curr_symbol];
+    return this.database.executeSql("UPDATE `settings` " +
+      " Set balance=?,first_day=?,language=?,user_email=?, notification=?,user_name=?, curr=?, curr_symbol=? ;", data)
       .then(data => {
-        console.log("new settings  : "+ JSON.stringify(settings));
+        console.log("new settings  : " + JSON.stringify(settings));
         return data;
       },
         err => {
@@ -403,7 +403,7 @@ export class DatabaseProvider {
   getCurrency() {
     return this.database.executeSql("select * from curr ", [])
       .then(data => {
-        let curr=[];
+        let curr = [];
         if (data.rows.length > 0) {
           for (var i = 0; i < data.rows.length; i++) {
             let c = data.rows.item(i);
@@ -418,7 +418,7 @@ export class DatabaseProvider {
         });
   }
 
-  getCurrencyByID(id : number) {
+  getCurrencyByID(id: number) {
     return this.database.executeSql("select * from curr where id = ?", [id])
       .then(data => {
         let curr: any;
@@ -434,27 +434,27 @@ export class DatabaseProvider {
   }
   //////////////////////////// statistics ////////////////////////////////
 
-  getRecenttPeriodExpense(type : string){
+  getRecenttPeriodExpense(type: string) {
     let s = "";
-    if(type=="week")
-    s = "'%Y-%W'";
-    if(type=="month")
-    s= "'%Y-%m'";
-    if(type=="day")
-    s = "'%Y-%m-%d'"
-    return this.database.executeSql("select sum(value) as total from item  where strftime("+s+
-    ",item_date) = strftime("+s+",'now');",[] ).then(data=>{
-      console.log(JSON.stringify(data));
-      let total = -1;
-      if (data.rows.length > 0) {
-        total = data.rows.item(0)['total'];
-      }
-      return total;
-    },
-      err => {
-        console.log(JSON.stringify(err));
-        return -1;
-      });
+    if (type == "week")
+      s = "'%Y-%W'";
+    if (type == "month")
+      s = "'%Y-%m'";
+    if (type == "day")
+      s = "'%Y-%m-%d'"
+    return this.database.executeSql("select sum(value) as total from item  where strftime(" + s +
+      ",item_date) = strftime(" + s + ",'now');", []).then(data => {
+        console.log(JSON.stringify(data));
+        let total = -1;
+        if (data.rows.length > 0) {
+          total = data.rows.item(0)['total'];
+        }
+        return total;
+      },
+        err => {
+          console.log(JSON.stringify(err));
+          return -1;
+        });
   }
   getTotalExpense(from: string, to: string) {
     return this.database.executeSql("select sum(value) as total from item where item_date >= ? and item_date <= ?", [from, to])
@@ -499,68 +499,68 @@ export class DatabaseProvider {
       if (data.rows.length > 0) {
         let max_date = data.rows.item(0)['max_date'];
         let min_date = data.rows.item(0)['min_date'];
-        console.log("min date is ",min_date);
-        console.log("max date is ",max_date);
+        console.log("min date is ", min_date);
+        console.log("max date is ", max_date);
         return { max: max_date, min: min_date };
-        
+
       }
     },
-    err=>{
-      console.log(JSON.stringify(err));
-    }
+      err => {
+        console.log(JSON.stringify(err));
+      }
     );
   }
 
-  getPeriodicValues(expense : boolean ,type : string){
+  getPeriodicValues(expense: boolean, type: string) {
     let s = "";
     let table = 'income';
-    if(expense)
-    table = 'item';
-    if(type=="week")
-    s = " strftime('%Y-%W', item_date)";
-    if(type=="month")
-    s= "strftime('%Y-%m', item_date)";
-    if(type=="day")
-    s = "strftime('%Y-%m-%d', item_date)"
-    return this.database.executeSql("select  "+ s+
-    " as title, sum(value) as total from "+table+" GROUP BY  "+s+" order by "+s+" DESC limit 100",[]).then(data=>{
-      let stats=[];
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          let r = data.rows.item(i);
-          stats.push(r);
+    if (expense)
+      table = 'item';
+    if (type == "week")
+      s = " strftime('%Y-%W', item_date)";
+    if (type == "month")
+      s = "strftime('%Y-%m', item_date)";
+    if (type == "day")
+      s = "strftime('%Y-%m-%d', item_date)"
+    return this.database.executeSql("select  " + s +
+      " as title, sum(value) as total from " + table + " GROUP BY  " + s + " order by " + s + " DESC limit 100", []).then(data => {
+        let stats = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let r = data.rows.item(i);
+            stats.push(r);
+          }
         }
-      }
-      return stats;
-    }).catch(reason=>{
-     return null;
-    });
+        return stats;
+      }).catch(reason => {
+        return null;
+      });
   }
 
-  
-  getCategoricExpenses(from: string, to: string){
-  
-    return this.database.executeSql("select item.category_id,sum(value) as total, category.name  as title "+
-    "  from item left join category on category.id=item.category_id  where  item_date between ? and ?"+
-    " group by category_id", [from, to]).then(data=>{
-      let stats=[];
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          let r = data.rows.item(i);
-          stats.push(r);
+
+  getCategoricExpenses(from: string, to: string) {
+
+    return this.database.executeSql("select item.category_id,sum(value) as total, category.name  as title " +
+      "  from item left join category on category.id=item.category_id  where  item_date between ? and ?" +
+      " group by category_id", [from, to]).then(data => {
+        let stats = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let r = data.rows.item(i);
+            stats.push(r);
+          }
         }
-      }
-      return stats;
-    }).catch(reason=>{
-     return null;
-    });
+        return stats;
+      }).catch(reason => {
+        return null;
+      });
   }
   ////////////////////////// history //////////////////////////////////
-  
-  
-  getHistory(s : String) {
-    return this.database.executeSql("select * from history  where text like ? ;", ["%"+s+"%"])
-   // return this.database.executeSql("select * from history ;", [])
+
+
+  getHistory(s: String) {
+    return this.database.executeSql("select * from history  where text like ? ;", ["%" + s + "%"])
+      // return this.database.executeSql("select * from history ;", [])
       .then(data => {
         let categories = [];
         if (data.rows.length > 0) {
@@ -578,7 +578,7 @@ export class DatabaseProvider {
   }
 
 
-  addHistory(text :String) {
+  addHistory(text: String) {
     let data = [null, text];
     return this.database.executeSql("REPLACE INTO `history` (id,text) VALUES (?,?);", data)
       .then(data => {
@@ -586,7 +586,7 @@ export class DatabaseProvider {
         return data;
       },
         err => {
-          console.log("error adding history",JSON.stringify(err));
+          console.log("error adding history", JSON.stringify(err));
           return err;
         })
   }
@@ -594,22 +594,42 @@ export class DatabaseProvider {
 
   ////////////////////////// export database ////////////////////////////
 
-  exportDatabase() {
-    return this.sqlitePorter.exportDbToSql(this.database).then(data=>{
-      //console.log(JSON.stringify(data));
-      return data;
-    })
+  resetDb() {
+    let success = false;
+    try {
+    console.log('clearing 1');
+    this.database.executeSql("delete from category where id >0;");
+    console.log('clearing 1');
+    this.database.executeSql("delete from item where id >0;");
+    console.log('clearing 1');
+    this.database.executeSql("delete from history where id >0;");
+    console.log('clearing 1');
+    this.database.executeSql("delete from monthly where id >0;");
+    this.database.executeSql("delete from weekly where id >0;");
+    this.database.executeSql("update settings set balance=5000, first_day=1,language=0,user_email='',user_name='',notification=0,curr=4;");
+    success = true;
+    return success;
+    } catch {
+
+    }
   }
 
+exportDatabase() {
+  return this.sqlitePorter.exportDbToSql(this.database).then(data => {
+    //console.log(JSON.stringify(data));
+    return data;
+  })
+}
 
-  importDataBase( data ){
-    return this.sqlitePorter.importSqlToDb(this.database,data).then(data=>{
-      this.setUnsaved(false);
-      return data;
-    },err=>{
-      return err;
-    }).catch(err=>{
-      console.log(JSON.stringify(err));
-    });
-  }
+
+importDataBase(data) {
+  return this.sqlitePorter.importSqlToDb(this.database, data).then(data => {
+    this.setUnsaved(false);
+    return data;
+  }, err => {
+    return err;
+  }).catch(err => {
+    console.log(JSON.stringify(err));
+  });
+}
 }

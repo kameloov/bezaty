@@ -64,7 +64,7 @@ export class ListMasterPage {
     })
   }
 
-
+  
   ionViewDidEnter() {
     setTimeout(()=>{
       if (this.shouldShowHint()){
@@ -80,7 +80,6 @@ export class ListMasterPage {
     }
   }
   
-
   shouldShowHint(){
     return ( this.currentItems && this.currentItems.length>0 && !this.shownBefore)
   }

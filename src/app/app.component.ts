@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Config, Nav, Platform, AlertController, Alert, ModalController, ToastController } from 'ionic-angular';
+import { Config, Nav, Platform, AlertController, Alert, ModalController, ToastController, LoadingController } from 'ionic-angular';
 import { Settings, Api } from '../providers';
 import { DatabaseProvider } from '../providers/database/database';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications';
@@ -34,6 +34,7 @@ export class MyApp {
   public side: string = "left"
   public appSettings: AppSettings;
   reminder_msg: string;
+  public loadingDlg : any;
   @ViewChild(Nav) nav: Nav;
   pages: any[] = [
     { title: 'MENU_HOME', component: 'ContentPage', root: true },
@@ -49,7 +50,7 @@ export class MyApp {
   constructor(private translate: TranslateService, public platform: Platform, public notification: LocalNotifications,
     public dbProvider: DatabaseProvider, public settings: Settings, private config: Config, public api: Api,
     private statusBar: StatusBar, private splashScreen: SplashScreen, public toastCtrl: ToastController,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,public loadingCtrl : LoadingController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -88,6 +89,7 @@ export class MyApp {
     });
 
   }
+
 
   handleLoginState(){
     this.dbProvider.isLogged().then(data => {
@@ -132,6 +134,7 @@ export class MyApp {
           {
             text: tra.YES_BTN,
             handler: () => {
+              this.showLoadingDialog();
               this.backup();
             }
           }
@@ -141,18 +144,29 @@ export class MyApp {
     })
   }
 
+  showLoadingDialog(){
+    this.loadingDlg = this.loadingCtrl.create({
+      content :''
+    });
+    this.loadingDlg.present();
+  }
 
   public backup() {
+    this.settings.getSettings().then(s=>{
     this.dbProvider.exportDatabase().then(data => {
-      this.api.post('data/backup', { email: this.appSettings.user_email, data: JSON.stringify(data) }).subscribe(data => {
+      this.api.post('data/backup', { email: s.user_email, data: JSON.stringify(data) }).subscribe(response => {
+        console.log(JSON.stringify(response))
         this.showMessage(this.success_message);
         this.dbProvider.setUnsaved(false);
         this.logout();
+        this.loadingDlg.dismiss();
       },
         err => {
           this.showMessage(this.fail_message);
+          this.loadingDlg.dismiss();
         })
     });
+  });
   }
 
   showMessage(msg: string) {

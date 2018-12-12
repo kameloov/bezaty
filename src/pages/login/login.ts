@@ -33,6 +33,8 @@ export class LoginPage {
     })
   }
 
+  
+ 
   // Attempt to login in through our User service
   doLogin() {
     this.loading = true;
@@ -52,6 +54,7 @@ export class LoginPage {
       this.loading = false;
     });
   }
+  
   showRestore(date: string) {
     this.translateService.get(['RESTORE_MESSAGE', 'RESTORE_TITLE', 'YES_BTN', 'NO_BTN'], { value: date }).subscribe(tra => {
       let alert = this.alertCtrl.create({

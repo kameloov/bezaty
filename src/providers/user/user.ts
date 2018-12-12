@@ -29,7 +29,7 @@ import { DatabaseProvider } from '../database/database';
 export class User {
   _user: any;
 
-  constructor(public api: Api, public db : DatabaseProvider) { }
+  constructor(public api: Api, public db: DatabaseProvider) { }
 
   /**
    * Send a POST request to our login endpoint with the data
@@ -41,15 +41,22 @@ export class User {
       // If the API returned a successful response, mark the user as logged in
       if (res.success == 1) {
         this._user = res.data[0];
-        console.log('updating user email ',accountInfo.email);
+        console.log('updating user email ', accountInfo.email);
         this.db.setLogged(true);
-        this.db.updateEmail(this._user.email,this._user.name).then(data=>{
-          console.log(data);
-        },err=>{
-          console.log('error ');
-        });
-      } else {
-      }
+        if (!this.isLastLoggedUser(accountInfo)) {
+          console.log('not last logged user');
+          this.db.resetDb();
+          this.db.updateEmail(this._user.email, this._user.name);
+     /*      this.db.getDatabaseState().subscribe(ready => {
+            if (ready) {
+              this.db.updateEmail(this._user.email, this._user.name);
+            }
+          }) */
+        } else {
+          console.log(' last logged user');
+          this.db.updateEmail(this._user.email, this._user.name);
+        }
+      } 
     }, err => {
       console.error('ERROR', err);
     });
@@ -57,14 +64,14 @@ export class User {
     return seq;
   }
 
-  sendResetCode(mail : string){
-    let c = Math.floor(Math.random()*9000+1000);
-    let req = this.api.post('reset/password',{email:mail,code :c }).share();
+  sendResetCode(mail: string) {
+    let c = Math.floor(Math.random() * 9000 + 1000);
+    let req = this.api.post('reset/password', { email: mail, code: c }).share();
     return req;
   }
 
-  resetPassword(mail :string , pass : string) {
-   return this.api.post('upate/password',{email:mail,passwor:pass});
+  resetPassword(mail: string, pass: string) {
+    return this.api.post('upate/password', { email: mail, passwor: pass });
 
   }
 
@@ -72,7 +79,7 @@ export class User {
    * Send a POST request to our signup endpoint with the data
    * the user entered on the form.
    */
-  signup(accountInfo: Account, lang : number) {
+  signup(accountInfo: Account, lang: number) {
     let seq = this.api.post('users/register', accountInfo).share();
     seq.subscribe((res: any) => {
       // If the API returned a successful response, mark the user as logged in
@@ -81,18 +88,23 @@ export class User {
         this.db.fillDB();
         accountInfo.id = res.data;
         this._user = accountInfo;
-        this.db.getDatabaseState().subscribe(ready=>{
-          if (ready){
-          this.db.updateEmailLang(accountInfo.email,accountInfo.name,lang);
+        this.db.getDatabaseState().subscribe(ready => {
+          if (ready) {
+            this.db.updateEmailLang(accountInfo.email, accountInfo.name, lang);
           }
         })
-
       }
     }, err => {
       console.error('ERROR', err);
     });
 
     return seq;
+  }
+
+  isLastLoggedUser(u: Account): any {
+    this.db.getSettings().then(data => {
+      return (data.user_email == u.email);
+    })
   }
 
   /**
@@ -102,8 +114,8 @@ export class User {
     this._user = null;
   }
 
-  isFirstUse(){
-  
+  isFirstUse() {
+
   }
 
 }
