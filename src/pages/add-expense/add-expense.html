@@ -44,7 +44,7 @@
         <ion-textarea class="input-pad" *ngIf= "!right" text-left [(ngModel)]="expense.hints"(input)="openSugestion($event)" ></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label color="primary" fixed>{{'AMOUNT'|translate}} ({{' '+currency.symbol_en+' '}}) </ion-label>
+        <ion-label color="primary" fixed>{{'AMOUNT'|translate}}<b>{{' '+currency.symbol_en}} </b> </ion-label>
         <ion-input class="input-pad"  *ngIf="right" text-right type="number"  [(ngModel)]="expense.value" ></ion-input>
         <ion-input  class="input-pad" *ngIf="!right" text-left type="number"  [(ngModel)]="expense.value" ></ion-input>
       </ion-item>
