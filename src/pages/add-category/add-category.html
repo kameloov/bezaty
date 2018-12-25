@@ -31,13 +31,14 @@
         <ion-textarea *ngIf="!right" text-left type="text" [(ngModel)]="category.details"></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label color="primary" fixed>{{'BALANCE'|translate}} ({{' '+currency.symbol_en+' '}})</ion-label>
+        <ion-label color="primary" fixed>{{'BALANCE'|translate}}<b>{{' '+currency.symbol_en}}</b></ion-label>
         <ion-input *ngIf="right" text-right type="number" [(ngModel)]="category.balance"
          placeholder="{{'EXPECTED_BALANCE'|translate}}"></ion-input>
         <ion-input *ngIf="!right" text-left type="number" [(ngModel)]="category.balance"
         placeholder="{{'EXPECTED_BALANCE'|translate}}"></ion-input>
       </ion-item>
       <br>
+
       <ion-item>
         <button ion-button default (click)="addCategory()"> {{'SAVE_BTN'|translate}}</button>
         <button ion-button default  color="danger" (click)="cancel()">{{'CANCEL_BUTTON'|translate}} </button>
